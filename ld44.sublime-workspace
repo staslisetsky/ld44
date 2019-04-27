@@ -1,0 +1,1687 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "build.bat",
+			"settings":
+			{
+				"buffer_size": 483,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/P/general/wasm_hell.bat",
+			"settings":
+			{
+				"buffer_size": 547,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "main.cpp",
+			"settings":
+			{
+				"buffer_size": 886,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "build/main_custom.html",
+			"settings":
+			{
+				"buffer_size": 323,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "win_bactorial.cpp",
+			"settings":
+			{
+				"buffer_size": 14292,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+		[
+			[
+				[
+					"Packages/C++/C++ Single File.sublime-build",
+					""
+				],
+				[
+					"Packages/C++/C++ Single File.sublime-build",
+					"Run"
+				],
+				[
+					"Packages/User/ls_clang.sublime-build",
+					""
+				]
+			],
+			[
+				"Packages/User/ls_clang.sublime-build",
+				""
+			]
+		]
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 104.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"mini",
+				"View: Toggle Minimap"
+			],
+			[
+				"map",
+				"View: Toggle Minimap"
+			],
+			[
+				"low",
+				"Convert Case: Lower Case"
+			],
+			[
+				"c",
+				"Set Syntax: C"
+			],
+			[
+				"rein",
+				"Indentation: Reindent Lines"
+			],
+			[
+				"lo",
+				"Convert Case: Lower Case"
+			],
+			[
+				"remov",
+				"Package Control: Remove Package"
+			],
+			[
+				"ins",
+				"Package Control: Install Package"
+			],
+			[
+				"remo",
+				"Package Control: Remove Package"
+			],
+			[
+				"insta",
+				"Package Control: Install Package"
+			],
+			[
+				"remv",
+				"Package Control: Remove Package"
+			],
+			[
+				"packa",
+				"Package Control: Install Package"
+			],
+			[
+				"tab",
+				"View: Toggle Tabs"
+			],
+			[
+				"tabs",
+				"View: Toggle Tabs"
+			],
+			[
+				"html",
+				"Set Syntax: HTML"
+			],
+			[
+				"upp",
+				"Convert Case: Upper Case"
+			],
+			[
+				"c++",
+				"Set Syntax: C++"
+			],
+			[
+				"lowe",
+				"Convert Case: Lower Case"
+			]
+		],
+		"width": 392.0
+	},
+	"console":
+	{
+		"height": 179.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/P/Ls/ld44"
+	],
+	"file_history":
+	[
+		"/P/Ls/ld44/build/main.html",
+		"/P/Ls/ld44/frontend.html",
+		"/P/Ls/ld44/build/main.js",
+		"/P/Ls/ld44/shell_minimal.html",
+		"/C/Users/stas/AppData/Roaming/Sublime Text 3/Packages/User/ls.sublime-build",
+		"/P/Ls/shi/asd",
+		"/P/Ls/shi/string.h",
+		"/P/Ls/shi/memory.cpp",
+		"/C/Program Files (x86)/Windows Kits/10/include/10.0.17763.0/ucrt/corecrt_malloc.h",
+		"/P/Ls/shi/sample_2.txt",
+		"/P/Ls/shi/edit.cpp",
+		"/P/Ls/shi/sample.txt",
+		"/P/Ls/lang/test.ls",
+		"/p/ls/cascade/source/pooks_styles.h",
+		"/P/writing/Торт 5",
+		"/p/ls/cascade/source/cascade.h",
+		"/P/Ls/cascade/Data/UI/cascade_componets.pks",
+		"/P/Ls/cascade/Data/UI/ui.pks",
+		"/p/ls/cascade/source/cascade_ui_engine.cpp",
+		"/C/Users/stas/AppData/Roaming/Sublime Text 3/Packages/Vintage/vintage.py",
+		"/p/ls/cascade/source/ls_string.h",
+		"/p/ls/cascade/source/cascade_gui.h",
+		"/p/ls/cascade/source/cascade_gui.cpp",
+		"/p/ls/cascade/source/cascade_app.cpp",
+		"/p/ls/cascade/source/pooks.h",
+		"/p/ls/cascade/source/cascade_lib.h",
+		"/P/Ls/cascade/Data/Shaders/HuePicker.frag",
+		"/p/ls/cascade/source/cascade_pooks.cpp",
+		"/p/ls/cascade/source/cascade.cpp",
+		"/C/Users/stas/AppData/Roaming/Sublime Text 3/Packages/Color Scheme - Default/Monokai.sublime-color-scheme",
+		"/p/ls/cascade/source/cascade_memory.h",
+		"/C/Users/stas/AppData/Roaming/Sublime Text 3/Packages/Color Scheme - Default/Monokai Stas.sublime-color-scheme",
+		"/P/Ls/cascade/Data/Shaders/ColorPicker.frag",
+		"/P/Ls/cascade/Data/UI/ui_temp.pks",
+		"/C/Users/stas/AppData/Roaming/Sublime Text 3/Packages/User/ZenTabs.sublime-settings",
+		"/C/Users/stas/Downloads/Telegram Desktop/stop-marker.svg",
+		"/P/Ls/cascade/Data/UI/sample.pks",
+		"/p/ls/cascade/source/cascade_render.cpp",
+		"/P/Ls/cascade/Docs/bugs.txt",
+		"/p/ls/cascade/source/cascade_vector.cpp",
+		"/p/ls/cascade/source/cascade_builder.cpp",
+		"/p/ls/cascade/source/cascade_render.h",
+		"/p/ls/cascade/source/cascade_console.cpp",
+		"/p/ls/cascade/source/cascade_memory.cpp",
+		"/P/Ls/cascade/Data/UI/ui_input_test.pks",
+		"/p/ls/cascade/source/cascade_editor.h",
+		"/P/third party/stb/stb.h",
+		"/D/Programs/4coder/config.4coder",
+		"/P/Ls/cascade/Data/UI/dynamic_ui.pks",
+		"/P/Ls/cascade/Docs/glext.h",
+		"/P/Ls/cascade/Docs/todo.txt",
+		"/p/ls/cascade/source/pooks.cpp",
+		"/P/Ls/cascade/Data/UI/sys-numfield.pks",
+		"/p/ls/cascade/source/cascade_assets.h",
+		"/p/ls/cascade/source/cascade_version.h",
+		"/p/ls/cascade/source/tmp",
+		"/P/Ls/cascade/Docs/pooks/pooks.txt",
+		"/p/ls/cascade/source/cascade_gl.cpp",
+		"/p/ls/cascade/source/cascade_controls.cpp",
+		"/p/ls/cascade/source/win_cascade_dx11/CascadeRender.cpp",
+		"/P/Ls/cascade/Docs/NOTES.txt",
+		"/p/ls/cascade/source/cascade_interaction.cpp",
+		"/p/ls/cascade/source/ls_meta_generate.cpp",
+		"/p/ls/cascade/source/build.bat",
+		"/p/ls/cascade/source/cascade_math.cpp",
+		"/P/Ls/cascade/Data/Shaders/TexturedQuad.frag",
+		"/P/Ls/cascade/Data/Shaders/Plain.vert",
+		"/P/Ls/cascade/Data/Shaders/Gradient.frag",
+		"/p/ls/cascade/source/cascade_vector.h",
+		"/P/Ls/cascade/source/tmp",
+		"/p/ls/cascade/source/ls_meta_generate_copy.cpp",
+		"/p/ls/cascade/source/win32_cascade.cpp",
+		"/p/ls/cascade/source/cascade_gl_loader.cpp",
+		"/p/ls/cascade/source/cascade_gl_loader_tmp.cpp",
+		"/P/Ls/cascade/Data/Shaders/Glyph.frag",
+		"/p/ls/cascade/source/cascade_platform.h",
+		"/p/ls/cascade/source/cascade_gl_loader.h",
+		"/p/ls/cascade/source/_generated_meta.h",
+		"/P/Ls/cascade/source/ls_polygon.h",
+		"/p/ls/cascade/source/cascade_math.h",
+		"/P/Ls/rasterizer/ls_rasterizer.cpp",
+		"/p/ls/cascade/source/ls_polygon.h",
+		"/P/Ls/cascade/Data/UI/ui_latest.pks",
+		"/p/ls/cascade/source/cascade_parser.h",
+		"/P/Ls/cascade/Data/UI/ui_tmp.pks",
+		"/p/ls/cascade/source/cascade_fonts.h",
+		"/p/ls/cascade/source/cascade_platform_struct_fuckcpp.h",
+		"/P/Ls/cascade/Data/Shaders/Fragment.frag",
+		"/P/Ls/cascade/Data/Shaders/HuePicker.vert",
+		"/p/ls/cascade/source/RenderApi_DX11/C_RenderApi_DX11_ImGui.h",
+		"/P/third party/imgui/imgui_draw.cpp",
+		"/P/third party/imgui/imgui.cpp",
+		"/P/third party/imgui/imgui_internal.h",
+		"/P/third party/imgui/imstb_textedit.h",
+		"/P/WinMainParameters.h",
+		"/P/main.cpp",
+		"/p/ls/cascade/source/PlatformStdLib/todo.txt",
+		"/P/Ls/cascade/source/cascade_vector.h",
+		"/P/Ls/znalka/data/index.html",
+		"/P/Ls/cascade/Docs/pooks/ui_spec_demo.pks",
+		"/P/Ls/cascade/ide/sublime/cascade_win.sublime-project",
+		"/p/Ls/cascade/source/cascade_ui_engine.cpp",
+		"/P/Ls/cascade/source/pooks_styles.h",
+		"/P/Ls/cascade/source/cascade_ui_engine.cpp",
+		"/P/Ls/cascade/ide/sublime/cascade_win.sublime-workspace",
+		"/P/Ls/cascade/source/ls_string.h",
+		"/P/work/yu-gi-oh/UMD/DATABASE/CHARALST.EHP",
+		"/P/work/yu-gi-oh/UMD/DATABASE/CARDALB.EHP",
+		"/E/BIN/US/CARDALB.BIN",
+		"/C/Users/stas/AppData/Roaming/Sublime Text 3/Packages/Color Scheme - Default/Monokai Stas Command.sublime-color-scheme",
+		"/P/third party/4coder/4coder_ui_helper.cpp",
+		"/P/Ls/cascade/ide/xcode_9.2/xcode_9.2.xcodeproj/project.xcworkspace/xcuserdata/stas.xcuserdatad/UserInterfaceState.xcuserstate",
+		"/P/Ls/znalka/ls/ls_meta.cpp",
+		"/P/Ls/znalka/template_generator.pro.user",
+		"/P/Ls/znalka/data/index - Copy.html",
+		"/P/printware/orders.log",
+		"/P/Ls/znalka/data/motherfuckingwebsite.com.html",
+		"/P/Ls/znalka/data/data",
+		"/P/Ls/znalka/data/style.css",
+		"/usr/include/x86_64-linux-gnu/bits/types.h",
+		"/home/stas/projects/znalka/sqlite_test.cpp",
+		"/home/stas/projects/znalka/sqlite_test.c",
+		"/usr/include/x86_64-linux-gnu/sys/socket.h",
+		"/home/stas/projects/znalka/blog.cpp",
+		"/home/stas/projects/znalka/data/rendered_templates.h",
+		"/media/stas/9CBCE9D0BCE9A4CC/Projects/Ls/cascade/Docs/ui_spec_demo.pks",
+		"/home/stas/projects/znalka/data/index.html",
+		"/home/stas/projects/znalka/ls/ls_serializer.h"
+	],
+	"find":
+	{
+		"height": 34.0
+	},
+	"find_in_files":
+	{
+		"height": 126.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"ctx",
+			"data",
+			"ObjectCount",
+			"statePointer",
+			"Test",
+			"void",
+			"aborts",
+			"abort",
+			"\"",
+			"'",
+			"obj",
+			"progressElement"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "build.bat",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 483,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								337,
+								337
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Batch File/Batch File.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "/P/general/wasm_hell.bat",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 547,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								547,
+								547
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Batch File/Batch File.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "main.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 886,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								871,
+								871
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "build/main_custom.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 323,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								322,
+								322
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				}
+			]
+		},
+		{
+			"selected": 2,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "build.bat",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 483,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								483,
+								483
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Batch File/Batch File.sublime-syntax"
+						},
+						"translation.x": 42.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "main.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 886,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								222,
+								222
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "win_bactorial.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 14292,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								14290,
+								14290
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 9092.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 34.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			],
+			[
+				1,
+				0,
+				2,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			0.5,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 401.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "Packages/User/ls.sublime-build",
+	"project": "ld44.sublime-project",
+	"replace":
+	{
+		"height": 64.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"bui",
+				"build.bat"
+			],
+			[
+				"main",
+				"main.cpp"
+			],
+			[
+				"win_",
+				"win_shi.cpp"
+			],
+			[
+				"win",
+				"win_shi.cpp"
+			],
+			[
+				"todo",
+				"todo.txt"
+			],
+			[
+				"sam",
+				"sample.txt"
+			],
+			[
+				"sa",
+				"sample.txt"
+			],
+			[
+				"ls_",
+				"ls_string.h"
+			],
+			[
+				"ls",
+				"ls_string.h"
+			],
+			[
+				"edt",
+				"string_edit.h"
+			],
+			[
+				"sampl",
+				"sample.txt"
+			],
+			[
+				"mem",
+				"memory.cpp"
+			],
+			[
+				"edit",
+				"string_edit.h"
+			],
+			[
+				"flt",
+				"flt.cpp"
+			],
+			[
+				"",
+				"string.h"
+			],
+			[
+				"comp",
+				"Data\\UI\\cascade_componets.pks"
+			],
+			[
+				"ui",
+				"Data\\UI\\ui.pks"
+			],
+			[
+				"pooks",
+				"source\\cascade_pooks.cpp"
+			],
+			[
+				"pooks.cpp",
+				"source\\cascade_pooks.cpp"
+			],
+			[
+				"pooks.c",
+				"source\\cascade_pooks.cpp"
+			],
+			[
+				"ooks",
+				"source\\cascade_pooks.cpp"
+			],
+			[
+				"gui",
+				"source\\cascade_gui.cpp"
+			],
+			[
+				"colorpick",
+				"Data\\Shaders\\ColorPicker.frag"
+			],
+			[
+				"picker",
+				"Data\\Shaders\\HuePicker.frag"
+			],
+			[
+				"casca",
+				"source\\cascade.h"
+			],
+			[
+				"pooks.",
+				"source\\cascade_pooks.cpp"
+			],
+			[
+				"hue",
+				"Data\\Shaders\\HuePicker.frag"
+			],
+			[
+				"pooks.h",
+				"source\\pooks.h"
+			],
+			[
+				"temp",
+				"Data\\UI\\ui_temp.pks"
+			],
+			[
+				"bug",
+				"Docs\\bugs.txt"
+			],
+			[
+				"pks",
+				"Data\\UI\\sample.pks"
+			],
+			[
+				"ren",
+				"source\\cascade_render.h"
+			],
+			[
+				"sys",
+				"Data\\UI\\sys-numfield.pks"
+			],
+			[
+				"ui.",
+				"Data\\UI\\ui.pks"
+			],
+			[
+				"ls_pol",
+				"source\\ls_polygon.h"
+			],
+			[
+				"color",
+				"Data\\Shaders\\ColorPicker.frag"
+			],
+			[
+				"pooksc",
+				"source\\cascade_pooks.cpp"
+			],
+			[
+				"tex",
+				"Data\\Shaders\\TexturedQuad.frag"
+			],
+			[
+				"pooks.cp",
+				"source\\cascade_pooks.cpp"
+			],
+			[
+				"colorp",
+				"Data\\Shaders\\ColorPicker.frag"
+			],
+			[
+				"frag",
+				"Data\\Shaders\\Fragment.frag"
+			],
+			[
+				"rend",
+				"source\\cascade_render.h"
+			],
+			[
+				"gly",
+				"Data\\Shaders\\Glyph.frag"
+			],
+			[
+				"colorpi",
+				"Data\\Shaders\\ColorPicker.frag"
+			],
+			[
+				"colo",
+				"Data\\Shaders\\ColorPicker.frag"
+			],
+			[
+				"gradien",
+				"Data\\Shaders\\Gradient.frag"
+			],
+			[
+				"plain",
+				"Data\\Shaders\\Plain.vert"
+			],
+			[
+				"pook",
+				"source\\cascade_pooks.cpp"
+			],
+			[
+				"u",
+				"Data\\UI\\ui.pks"
+			],
+			[
+				"win32",
+				"source\\win32_cascade.cpp"
+			],
+			[
+				"casa",
+				"source\\cascade.cpp"
+			],
+			[
+				"ls_str",
+				"source\\ls_string.h"
+			],
+			[
+				"pla",
+				"source\\cascade_platform.h"
+			],
+			[
+				"plat",
+				"source\\cascade_platform.h"
+			],
+			[
+				"platf",
+				"source\\cascade_platform.h"
+			],
+			[
+				"cas",
+				"source\\cascade.cpp"
+			],
+			[
+				"casc",
+				"source\\cascade.cpp"
+			],
+			[
+				"ls_s",
+				"source\\ls_string.h"
+			],
+			[
+				"cascade.cpp",
+				"source\\cascade.cpp"
+			],
+			[
+				"cascadeapp",
+				"source\\cascade_app.cpp"
+			],
+			[
+				"re",
+				"source\\cascade_render.h"
+			],
+			[
+				"render",
+				"source\\cascade_render.h"
+			],
+			[
+				"string.",
+				"source\\ls_string.h"
+			],
+			[
+				"string",
+				"source\\ls_string.h"
+			],
+			[
+				"dyna",
+				"Data\\UI\\dynamic_ui.pks"
+			],
+			[
+				"vec",
+				"source\\cascade_vector.cpp"
+			],
+			[
+				"vector",
+				"source\\cascade_vector.cpp"
+			],
+			[
+				"gene",
+				"source\\_generated_meta.h"
+			],
+			[
+				"meta",
+				"source\\_generated_meta.h"
+			],
+			[
+				"genera",
+				"source\\ls_meta_generate.cpp"
+			],
+			[
+				"ls_me",
+				"source\\ls_meta_generate.cpp"
+			],
+			[
+				"engine",
+				"source\\cascade_ui_engine.cpp"
+			],
+			[
+				"vect",
+				"source\\cascade_vector.cpp"
+			],
+			[
+				"vecotr",
+				"source\\cascade_vector.cpp"
+			],
+			[
+				"ui_eng",
+				"source\\cascade_ui_engine.cpp"
+			],
+			[
+				"math.h",
+				"source\\cascade_math.h"
+			],
+			[
+				"math",
+				"source\\cascade_math.cpp"
+			],
+			[
+				"vector.",
+				"source\\cascade_vector.h"
+			],
+			[
+				"ls_poly",
+				"source\\ls_polygon.h"
+			],
+			[
+				"cascade",
+				"source\\cascade.h"
+			],
+			[
+				"rende",
+				"source\\cascade_render.h"
+			],
+			[
+				"vecto",
+				"source\\cascade_vector.cpp"
+			],
+			[
+				"editor",
+				"source\\cascade_editor.h"
+			],
+			[
+				"poly",
+				"source\\ls_polygon.h"
+			],
+			[
+				"tmp",
+				"source\\tmp"
+			],
+			[
+				"engin",
+				"source\\cascade_ui_engine.cpp"
+			],
+			[
+				"tm",
+				"source\\tmp"
+			],
+			[
+				"poo",
+				"source\\cascade_pooks.cpp"
+			],
+			[
+				"pooks.pp",
+				"source\\pooks.cpp"
+			],
+			[
+				"vers",
+				"source\\cascade_version.h"
+			],
+			[
+				"ui_e",
+				"source\\cascade_ui_engine.cpp"
+			],
+			[
+				"ls_string",
+				"source\\ls_string.h"
+			],
+			[
+				"notes",
+				"Docs\\NOTES.txt"
+			],
+			[
+				"ui_en",
+				"source\\cascade_ui_engine.cpp"
+			],
+			[
+				"ui.pk",
+				"Docs\\pooks\\ui_spec_demo.pks"
+			],
+			[
+				"todo.",
+				"PlatformStdLib\\todo.txt"
+			],
+			[
+				"ca",
+				"source\\cascade.cpp"
+			],
+			[
+				"w",
+				"source\\win32_cascade.cpp"
+			],
+			[
+				"ls_meta_generate",
+				"source\\ls_meta_generate.cpp"
+			],
+			[
+				"intera",
+				"source\\cascade_interaction.cpp"
+			],
+			[
+				"ooks.c",
+				"source\\cascade_pooks.cpp"
+			],
+			[
+				"ls_st",
+				"source\\ls_string.h"
+			],
+			[
+				"fonts",
+				"source\\cascade_fonts.cpp"
+			],
+			[
+				"platform.h",
+				"source\\cascade_platform.h"
+			],
+			[
+				"utf",
+				"Data\\utf8strings.txt"
+			],
+			[
+				"stri",
+				"source\\PlatformLib\\Strings_Coders.h"
+			],
+			[
+				"uie",
+				"source\\cascade_ui_engine.cpp"
+			],
+			[
+				"casade.",
+				"source\\cascade.cpp"
+			],
+			[
+				"c",
+				"source\\cascade.cpp"
+			],
+			[
+				"tem",
+				"template_maker.cpp"
+			],
+			[
+				"inde.",
+				"data\\index.html"
+			],
+			[
+				"admin",
+				"data\\admin.html"
+			],
+			[
+				"ma",
+				"main.cpp"
+			],
+			[
+				"bu",
+				"build.sh"
+			],
+			[
+				"fcgi",
+				"ls_fcgi.h"
+			],
+			[
+				"pag",
+				"data/templates/page.nos"
+			],
+			[
+				"trender",
+				"data/rendered_templates.h"
+			],
+			[
+				"app",
+				"app.cpp"
+			],
+			[
+				"fcg",
+				"ls_fcgi.h"
+			],
+			[
+				"page",
+				"data/templates/page.nos"
+			],
+			[
+				"no",
+				"data/templates/main.nos"
+			],
+			[
+				"blog",
+				"blog.cpp"
+			],
+			[
+				"page.",
+				"data/templates/page.nos"
+			],
+			[
+				"manin",
+				"data/templates/main.nos"
+			],
+			[
+				"main.",
+				"data/templates/main.nos"
+			],
+			[
+				"mian.",
+				"data/templates/main.nos"
+			],
+			[
+				"page.nose",
+				"template_generator.pro.user"
+			],
+			[
+				"mian",
+				"main.cpp"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 574.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 633.0
+	},
+	"select_symbol":
+	{
+		"height": 392.0,
+		"last_filter": "loca",
+		"selected_items":
+		[
+			[
+				"loca",
+				"Location"
+			],
+			[
+				"ffto",
+				"FFToChar"
+			],
+			[
+				"locate",
+				"LocateLineEnd"
+			],
+			[
+				"edita",
+				"editable_string"
+			],
+			[
+				"ocate",
+				"LocateLineEnd"
+			],
+			[
+				"render",
+				"Render"
+			],
+			[
+				"inser",
+				"InsertChars"
+			],
+			[
+				"mo",
+				"MoveGapToByteOffset"
+			],
+			[
+				"move",
+				"MoveGapToByteOffset"
+			],
+			[
+				"ovegapto",
+				"MoveGapToCaret"
+			],
+			[
+				"edit",
+				"editable_string"
+			],
+			[
+				"gapsi",
+				"GapSize"
+			],
+			[
+				"g",
+				"Gigabytes"
+			],
+			[
+				"gap",
+				"GapEndPointer"
+			],
+			[
+				"e",
+				"editable_string"
+			],
+			[
+				"toby",
+				"MoveGapToByteOffset"
+			],
+			[
+				"ove",
+				"MoveGapToByteOffset"
+			],
+			[
+				"inse",
+				"InsertChars"
+			],
+			[
+				"edi",
+				"EDITABLE_BUFFER_SIZE"
+			],
+			[
+				"hic",
+				"ShiCopyMemory"
+			],
+			[
+				"cons",
+				"console"
+			],
+			[
+				"syste",
+				"system_context"
+			],
+			[
+				"TmpAlloc",
+				"TmpAlloc"
+			],
+			[
+				"shico",
+				"ShiCopyMemory"
+			],
+			[
+				"ed",
+				"EDITABLE_BUFFER_SIZE"
+			],
+			[
+				"editab",
+				"EDITABLE_BUFFER_SIZE"
+			],
+			[
+				"conso",
+				"console"
+			],
+			[
+				"InsertChars",
+				"InsertChars"
+			],
+			[
+				"append",
+				"Append"
+			],
+			[
+				"stor",
+				"storage"
+			],
+			[
+				"converto",
+				"ConvertToWideString"
+			],
+			[
+				"shi",
+				"ShiPaste"
+			],
+			[
+				"ls_arse",
+				"ls_parser"
+			],
+			[
+				"co",
+				"console"
+			],
+			[
+				"ommand",
+				"command_string"
+			],
+			[
+				"utf8",
+				"utf8"
+			],
+			[
+				"stora",
+				"storage"
+			],
+			[
+				"consol",
+				"console"
+			],
+			[
+				"ShiPaste",
+				"ShiPaste"
+			],
+			[
+				"appendf",
+				"AppendF"
+			],
+			[
+				"winma",
+				"WinMain"
+			],
+			[
+				"winmai",
+				"WinMain"
+			],
+			[
+				"fit",
+				"FitSize"
+			],
+			[
+				"shiw",
+				"ShiWriteLine"
+			],
+			[
+				"storage",
+				"storage"
+			],
+			[
+				"editable_string",
+				"editable_string"
+			],
+			[
+				"ls_par",
+				"ls_parser"
+			],
+			[
+				"bytes",
+				"MoveGapToByteOffset"
+			],
+			[
+				"cono",
+				"console"
+			],
+			[
+				"EnsureSizeFits",
+				"EnsureSizeFits"
+			],
+			[
+				"getline",
+				"GetLine"
+			],
+			[
+				"",
+				"AppendChar"
+			],
+			[
+				"all",
+				"Allocate"
+			],
+			[
+				"block",
+				"BLOCK_SIZE"
+			],
+			[
+				"storae",
+				"storage_block"
+			],
+			[
+				"ls_string",
+				"ls_string"
+			],
+			[
+				"string_pos",
+				"string_pos"
+			],
+			[
+				"console",
+				"console"
+			],
+			[
+				"find",
+				"find_space_result"
+			],
+			[
+				"con",
+				"console"
+			],
+			[
+				"shiapp",
+				"ShiAppendBuffer"
+			],
+			[
+				"Allocate",
+				"Allocate"
+			],
+			[
+				"ensure",
+				"EnsureSizeFits"
+			],
+			[
+				"storage_",
+				"storage_block"
+			],
+			[
+				"pooks",
+				"pooks_style"
+			],
+			[
+				"parse",
+				"PooksParseStyle"
+			],
+			[
+				"finalize",
+				"PooksFinalizeLayout"
+			],
+			[
+				"parses",
+				"PooksParseStyle"
+			],
+			[
+				"debugda",
+				"debug_data"
+			],
+			[
+				"finali",
+				"PooksFinalizeLayout"
+			],
+			[
+				"pookl",
+				"PooksLoadStyle"
+			],
+			[
+				"obj",
+				"object"
+			],
+			[
+				"ls_fra",
+				"ls_frame_array"
+			],
+			[
+				"dorow",
+				"PooksDoRowLayout"
+			],
+			[
+				"pooks_var",
+				"pooks_var"
+			],
+			[
+				"pooks_va",
+				"pooks_val_"
+			],
+			[
+				"pooks_s",
+				"pooks_style"
+			],
+			[
+				"obje",
+				"object"
+			],
+			[
+				"debug_da",
+				"debug_data"
+			],
+			[
+				"doman",
+				"PooksDoManualLayout"
+			],
+			[
+				"color",
+				"color_picker"
+			],
+			[
+				"windo",
+				"window_fill"
+			],
+			[
+				"framest",
+				"CascadeFrameStart"
+			],
+			[
+				"win",
+				"window_fill"
+			],
+			[
+				"hsv",
+				"GetHSVAFromRGBA"
+			],
+			[
+				"doma",
+				"PooksDoManualLayout"
+			],
+			[
+				"pooks_context",
+				"pooks_context"
+			],
+			[
+				"oman",
+				"PooksDoManualLayout"
+			],
+			[
+				"window",
+				"window_fill"
+			],
+			[
+				"gui_s",
+				"gui_state"
+			],
+			[
+				"cascadefra",
+				"CascadeFrameStart"
+			],
+			[
+				"parsest",
+				"PooksParseStyle"
+			],
+			[
+				"pooks_te",
+				"pooks_text"
+			],
+			[
+				"vo_tre",
+				"vo_tree"
+			],
+			[
+				"pookspar",
+				"PooksParseStyle"
+			],
+			[
+				"duplica",
+				"DuplicateBranch"
+			],
+			[
+				"bui",
+				"pooks_build_info"
+			],
+			[
+				"final",
+				"PooksFinalizeLayout"
+			],
+			[
+				"loaddef",
+				"PooksLoadDefaultStyle"
+			],
+			[
+				"voro",
+				"vo_role"
+			],
+			[
+				"PushSimplePathStroke",
+				"PushSimplePathStroke"
+			],
+			[
+				"rectpath",
+				"MakeRoundedRectPath"
+			],
+			[
+				"rectpat",
+				"MakeRoundedRectPath"
+			],
+			[
+				"pushed",
+				"PushEditedBezierShape"
+			],
+			[
+				"stroke",
+				"PushSimplePathStroke"
+			],
+			[
+				"pushround",
+				"PushRoundedRect"
+			],
+			[
+				"framemme",
+				"FrameMemoryPush"
+			],
+			[
+				"frameme",
+				"FrameMemoryAlloc"
+			],
+			[
+				"renderer",
+				"renderer"
+			],
+			[
+				"pushro",
+				"PushRoundedRect"
+			],
+			[
+				"pushsim",
+				"PushSimplePathStroke"
+			],
+			[
+				"addrender",
+				"AddRenderCommand"
+			],
+			[
+				"AddRenderEntry",
+				"AddRenderEntry"
+			],
+			[
+				"pushrec",
+				"PushRect"
+			],
+			[
+				"push",
+				"PushRect"
+			],
+			[
+				"finaliz",
+				"PooksFinalizeLayout"
+			],
+			[
+				"pooks_sty",
+				"pooks_style"
+			],
+			[
+				"consolepr",
+				"ConsolePrintf"
+			],
+			[
+				"PushCircle",
+				"PushCircle"
+			],
+			[
+				"border",
+				"pooks_border"
+			],
+			[
+				"pooksparses",
+				"PooksParseStyle"
+			],
+			[
+				"pooksparsev",
+				"PooksParseValue"
+			],
+			[
+				"pooks_bo",
+				"pooks_border"
+			],
+			[
+				"pooks_v",
+				"pooks_val_"
+			],
+			[
+				"pooks_bor",
+				"pooks_border"
+			],
+			[
+				"domanual",
+				"PooksDoManualLayout"
+			],
+			[
+				"hsva",
+				"GetHSVAFromRGBA"
+			],
+			[
+				"rgba",
+				"RGBA"
+			]
+		],
+		"width": 592.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": false,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": false,
+	"side_bar_width": 362.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
