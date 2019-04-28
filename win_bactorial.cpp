@@ -99,15 +99,26 @@ Render()
     for (u32 i=0; i<World.ObjectCount; ++i) {
         object Object = World.Objects[i];
         u32 Dim = 10;
+        u32 HalfScreen = 250;
 
-        // if (Object.Selected) {
-        //     RenderTarget->FillRectangle(D2D1::RectF(Object.P.x, Object.P.y, Object.P.x + Dim, Object.P.y + Dim), RedBrush);
-        // } else {
-            RenderTarget->FillRectangle(D2D1::RectF(Object.P.x, Object.P.y, Object.P.x + Dim, Object.P.y + Dim), BlackBrush);
-        // }
+        D2D1_POINT_2F ObjectCenter = {Object.P.x + HalfScreen, Object.P.y + HalfScreen};
+        D2D1_ELLIPSE ObjectEllipse = {ObjectCenter, (r32)Object.Radius, (r32)Object.Radius};
+
+        if (Object.Selected) {
+            RenderTarget->FillEllipse(ObjectEllipse, RedBrush);
+        } else {
+            RenderTarget->FillEllipse(ObjectEllipse, BlackBrush);
+        }
     }
 
-    RenderTarget->FillRectangle(D2D1::RectF(World.AttractorP.x, World.AttractorP.y, World.AttractorP.x + 40, World.AttractorP.y + 40), RedBrush);
+    if (World.SelectionMode) {
+        rect RenderRect = World.SelectionRect;
+        RenderRect.Min += V2(250.0f, 250.0f);
+        RenderRect.Max += V2(250.0f, 250.0f);
+        DrawRectOutline(RenderRect);
+    }
+
+    // RenderTarget->FillRectangle(D2D1::RectF(World.AttractorP.x, World.AttractorP.y, World.AttractorP.x + 40, World.AttractorP.y + 40), RedBrush);
 
     RenderTarget->EndDraw();
     SafeRelease(&BlackBrush); 
@@ -249,11 +260,7 @@ Render()
     RenderTarget->FillRectangle(CaretRect, BlackBrush);
     RenderTarget->DrawTextLayout({(r32)LayoutP.x, (r32)LayoutP.y}, Layout, BlackBrush, D2D1_DRAW_TEXT_OPTIONS_NONE);
     RenderTarget->EndDraw();
-    
-    for (u32 i=0; i<Key_Count; ++i) {
-       Input.Keys[i].WentDown = false; 
-       Input.Keys[i].WentUp = false; 
-    }
+
 
     Input.Mouse[0].WentDown = false;
     Input.Mouse[1].WentDown = false;
@@ -411,8 +418,8 @@ WinMain(HINSTANCE Instance, HINSTANCE PreviousInstance, LPSTR Args, int WindowSh
         GetCursorPos(&MousePoint);
         ScreenToClient(Window, &MousePoint);
 
-        Input.MouseP.x = MousePoint.x;
-        Input.MouseP.y = MousePoint.y;
+        Input.MouseP.x = MousePoint.x - 250.0;
+        Input.MouseP.y = MousePoint.y - 250.0;
 
         if (Input.Mouse[0].WentDown) {
             v2 P = {(r32)Input.MouseP.x, (r32)Input.MouseP.y};
@@ -421,8 +428,43 @@ WinMain(HINSTANCE Instance, HINSTANCE PreviousInstance, LPSTR Args, int WindowSh
             BactorialSelectAtP(P);
         }
 
-        // r32 dt = 1.0f/ 60.0f;
-        r32 dt = 0.1f/ 60.0f;
+        if (Input.Mouse[0].WentDown) {
+            World.SelectionStart = Input.MouseP;
+            v2 P = {(r32)Input.MouseP.x, (r32)Input.MouseP.y};
+            World.AttractorP = Input.MouseP;
+            World.AttractorActive = true;
+            BactorialSelectAtP(P);
+        }
+
+        if (Input.Mouse[0].Down) {
+            if (Length(Input.MouseP - World.SelectionRect.Min) > 20.0f) {
+                World.SelectionMode = true;
+            }
+            if (World.SelectionMode) {
+                v2 Min = World.SelectionStart;
+                v2 Max = Input.MouseP;
+
+                r32 MinX = Min_r32(Min.x, Max.x);
+                r32 MinY = Min_r32(Min.y, Max.y);
+                r32 MaxX = Max_r32(Min.x, Max.x);
+                r32 MaxY = Max_r32(Min.y, Max.y);
+
+                World.SelectionRect = {{MinX, MinY}, {MaxX, MaxY}};
+            }
+        }
+
+        if (Input.Mouse[0].WentUp) {
+            if (World.SelectionMode) {
+                BactorialSelectInRect(World.SelectionRect);    
+                World.SelectionMode = false;    
+            }
+        }
+
+        if (Input.Keys[Key_F1].WentDown) {
+            BactorialCommenceMitosis();
+        }
+
+        r32 dt = 1.0f/ 60.0f;
         BactorialUpdateWorld(dt);
         InvalidateRect(Window, NULL, FALSE);
 
@@ -431,6 +473,11 @@ WinMain(HINSTANCE Instance, HINSTANCE PreviousInstance, LPSTR Args, int WindowSh
 
         Input.Mouse[0].WentUp = false;
         Input.Mouse[1].WentUp = false;
+
+        for (u32 i=0; i<Key_Count; ++i) {
+           Input.Keys[i].WentDown = false; 
+           Input.Keys[i].WentUp = false; 
+        }
 
         Sleep(1.0f/ 60.0f);
     }

@@ -43,10 +43,26 @@ struct quad_tree {
     u32 NodeCount;
 };
 
+enum mode_ {
+    Mode_Idle,
+    Mode_Mitosis,
+    Mode_Attack,
+
+    Mode_Count,
+};
+
 struct object {
     v2 P;
     v2 Velocity;
-    // b32 Selected;
+    v2 Velocity2;
+    u32 Radius;
+    b32 Selected;
+
+    mode_ Mode;
+    r32 MitosisProgress;
+
+    char *Name;
+    r32 Soul;
 };
 
 struct world {
@@ -55,6 +71,12 @@ struct world {
     v2 *Velocities;
 
 // internal data:
+    u32 SelectedIndex;
+    u32 SelectedCount;
+
+    v2 SelectionStart;
+    rect SelectionRect;
+    b32 SelectionMode;
 
     object *Objects;
     v2 AttractorP;

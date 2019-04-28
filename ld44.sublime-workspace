@@ -8,10 +8,19 @@
 	"buffers":
 	[
 		{
-			"file": "build.bat",
+			"file": "build_wasm.bat",
 			"settings":
 			{
-				"buffer_size": 483,
+				"buffer_size": 302,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "win_bactorial.h",
+			"settings":
+			{
+				"buffer_size": 1631,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -26,10 +35,108 @@
 			}
 		},
 		{
+			"file": "wasm_bactorial.cpp",
+			"settings":
+			{
+				"buffer_size": 420,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"settings":
+			{
+				"buffer_size": 0,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "build/main.html",
+			"settings":
+			{
+				"buffer_size": 1279,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "build/bactorial_wasm_loader.js",
+			"settings":
+			{
+				"buffer_size": 1255,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "win_bactorial.cpp",
+			"settings":
+			{
+				"buffer_size": 15186,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "bactorial.cpp",
+			"settings":
+			{
+				"buffer_size": 6115,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "/*\n * PCG Random Number Generation for C.\n *\n * Copyright 2014 Melissa O'Neill <oneill@pcg-random.org>\n *\n * Licensed under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License.\n * You may obtain a copy of the License at\n *\n *     http://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software\n * distributed under the License is distributed on an \"AS IS\" BASIS,\n * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n * See the License for the specific language governing permissions and\n * limitations under the License.\n *\n * For additional information about the PCG random number generation scheme,\n * including its license and other licensing options, visit\n *\n *       http://www.pcg-random.org\n */\n\n/*\n * This code is derived from the full C implementation, which is in turn\n * derived from the canonical C++ PCG implementation. The C++ version\n * has many additional features and is preferable if you can use C++ in\n * your project.\n */\n\n#include \"pcg_basic.h\"\n\n// state for global RNGs\n\nstatic pcg32_random_t pcg32_global = PCG32_INITIALIZER;\n\n// pcg32_srandom(initstate, initseq)\n// pcg32_srandom_r(rng, initstate, initseq):\n//     Seed the rng.  Specified in two parts, state initializer and a\n//     sequence selection constant (a.k.a. stream id)\n\nvoid pcg32_srandom_r(pcg32_random_t* rng, uint64_t initstate, uint64_t initseq)\n{\n    rng->state = 0U;\n    rng->inc = (initseq << 1u) | 1u;\n    pcg32_random_r(rng);\n    rng->state += initstate;\n    pcg32_random_r(rng);\n}\n\nvoid pcg32_srandom(uint64_t seed, uint64_t seq)\n{\n    pcg32_srandom_r(&pcg32_global, seed, seq);\n}\n\n// pcg32_random()\n// pcg32_random_r(rng)\n//     Generate a uniformly distributed 32-bit random number\n\nuint32_t pcg32_random_r(pcg32_random_t* rng)\n{\n    uint64_t oldstate = rng->state;\n    rng->state = oldstate * 6364136223846793005ULL + rng->inc;\n    uint32_t xorshifted = ((oldstate >> 18u) ^ oldstate) >> 27u;\n    uint32_t rot = oldstate >> 59u;\n    return (xorshifted >> rot) | (xorshifted << ((-rot) & 31));\n}\n\nuint32_t pcg32_random()\n{\n    return pcg32_random_r(&pcg32_global);\n}\n\n\n// pcg32_boundedrand(bound):\n// pcg32_boundedrand_r(rng, bound):\n//     Generate a uniformly distributed number, r, where 0 <= r < bound\n\nuint32_t pcg32_boundedrand_r(pcg32_random_t* rng, uint32_t bound)\n{\n    // To avoid bias, we need to make the range of the RNG a multiple of\n    // bound, which we do by dropping output less than a threshold.\n    // A naive scheme to calculate the threshold would be to do\n    //\n    //     uint32_t threshold = 0x100000000ull % bound;\n    //\n    // but 64-bit div/mod is slower than 32-bit div/mod (especially on\n    // 32-bit platforms).  In essence, we do\n    //\n    //     uint32_t threshold = (0x100000000ull-bound) % bound;\n    //\n    // because this version will calculate the same modulus, but the LHS\n    // value is less than 2^32.\n\n    uint32_t threshold = -bound % bound;\n\n    // Uniformity guarantees that this loop will terminate.  In practice, it\n    // should usually terminate quickly; on average (assuming all bounds are\n    // equally likely), 82.25% of the time, we can expect it to require just\n    // one iteration.  In the worst case, someone passes a bound of 2^31 + 1\n    // (i.e., 2147483649), which invalidates almost 50% of the range.  In \n    // practice, bounds are typically small and only a tiny amount of the range\n    // is eliminated.\n    for (;;) {\n        uint32_t r = pcg32_random_r(rng);\n        if (r >= threshold)\n            return r % bound;\n    }\n}\n\n\nuint32_t pcg32_boundedrand(uint32_t bound)\n{\n    return pcg32_boundedrand_r(&pcg32_global, bound);\n}\n\n",
+			"file": "pcg_basic.c",
+			"file_size": 3744,
+			"file_write_time": 130580477660000000,
+			"settings":
+			{
+				"buffer_size": 3744,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "/*\n * PCG Random Number Generation for C.\n *\n * Copyright 2014 Melissa O'Neill <oneill@pcg-random.org>\n *\n * Licensed under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License.\n * You may obtain a copy of the License at\n *\n *     http://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software\n * distributed under the License is distributed on an \"AS IS\" BASIS,\n * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n * See the License for the specific language governing permissions and\n * limitations under the License.\n *\n * For additional information about the PCG random number generation scheme,\n * including its license and other licensing options, visit\n *\n *     http://www.pcg-random.org\n */\n\n/*\n * This code is derived from the full C implementation, which is in turn\n * derived from the canonical C++ PCG implementation. The C++ version\n * has many additional features and is preferable if you can use C++ in\n * your project.\n */\n\n#ifndef PCG_BASIC_H_INCLUDED\n#define PCG_BASIC_H_INCLUDED 1\n\n#include <inttypes.h>\n\n#if __cplusplus\nextern \"C\" {\n#endif\n\nstruct pcg_state_setseq_64 {    // Internals are *Private*.\n    uint64_t state;             // RNG state.  All values are possible.\n    uint64_t inc;               // Controls which RNG sequence (stream) is\n                                // selected. Must *always* be odd.\n};\ntypedef struct pcg_state_setseq_64 pcg32_random_t;\n\n// If you *must* statically initialize it, here's one.\n\n#define PCG32_INITIALIZER   { 0x853c49e6748fea9bULL, 0xda3e39cb94b95bdbULL }\n\n// pcg32_srandom(initstate, initseq)\n// pcg32_srandom_r(rng, initstate, initseq):\n//     Seed the rng.  Specified in two parts, state initializer and a\n//     sequence selection constant (a.k.a. stream id)\n\nvoid pcg32_srandom(uint64_t initstate, uint64_t initseq);\nvoid pcg32_srandom_r(pcg32_random_t* rng, uint64_t initstate,\n                     uint64_t initseq);\n\n// pcg32_random()\n// pcg32_random_r(rng)\n//     Generate a uniformly distributed 32-bit random number\n\nuint32_t pcg32_random(void);\nuint32_t pcg32_random_r(pcg32_random_t* rng);\n\n// pcg32_boundedrand(bound):\n// pcg32_boundedrand_r(rng, bound):\n//     Generate a uniformly distributed number, r, where 0 <= r < bound\n\nuint32_t pcg32_boundedrand(uint32_t bound);\nuint32_t pcg32_boundedrand_r(pcg32_random_t* rng, uint32_t bound);\n\n#if __cplusplus\n}\n#endif\n\n#endif // PCG_BASIC_H_INCLUDED\n",
+			"file": "pcg_basic.h",
+			"file_size": 2520,
+			"file_write_time": 130580477660000000,
+			"settings":
+			{
+				"buffer_size": 2520,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"settings":
+			{
+				"buffer_size": 0,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "bactorial.h",
+			"settings":
+			{
+				"buffer_size": 1242,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "build/main.js",
+			"settings":
+			{
+				"buffer_size": 20176,
+				"line_ending": "Windows"
+			}
+		},
+		{
 			"file": "main.cpp",
 			"settings":
 			{
-				"buffer_size": 886,
+				"buffer_size": 515,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -44,12 +151,77 @@
 			}
 		},
 		{
-			"file": "win_bactorial.cpp",
+			"file": "state.h",
 			"settings":
 			{
-				"buffer_size": 14292,
+				"buffer_size": 147,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "cascade_math.cpp",
+			"settings":
+			{
+				"buffer_size": 26022,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "cascade_math.h",
+			"settings":
+			{
+				"buffer_size": 1153,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/P/Ls/neuro/ls_neuro.h",
+			"settings":
+			{
+				"buffer_size": 2535,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "include/pcg_extras.hpp",
+			"settings":
+			{
+				"buffer_size": 19553,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "build.bat",
+			"settings":
+			{
+				"buffer_size": 488,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "var globals = {\n  statePointer: 0,\n  objects: []\n};\n\nvar Module = {\n  onRuntimeInitialized: init,\n};\n\nfunction init() {\n  globals.statePointer = Module._BactorialInitWorld();\n  loadState();\n  console.log('World initialized');\n};\n\nfunction loadState() {\n  var objectCount = Module.getValue(globals.statePointer, \"i32\");\n  console.log('Object count: ' + objectCount);\n\n  var objectsData = globals.statePointer + 4;\n\n  for (i=0; i<objectCount; ++i) {\n    var positions = Module.getValue(objectsData, \"*\");\n    objectsData += 8;\n\n    var velocities = Module.getValue(objectsData, \"*\");\n    objectsData += 8;\n\n    for (var i=0; i<objectCount; ++i) {\n        var x = Module.getValue(objectsData, \"float\");\n        positions += 4;\n        var y = Module.getValue(objectsData, \"float\");\n        positions += 4;\n\n        console.log(' position: {' + x + ', ' + y + '}');\n    }\n\n    for (var i=0; i<objectCount; ++i) {\n        var x = Module.getValue(objectsData, \"float\");\n        velocities += 4;\n        var y = Module.getValue(objectsData, \"float\");\n        velocities += 4;\n\n        console.log(' velocity: {' + x + ', ' + y + '}');\n    }\n  }\n}",
+			"file": "bactorial_wasm_loader.js",
+			"file_size": 1185,
+			"file_write_time": 132008587974036043,
+			"settings":
+			{
+				"buffer_size": 1139,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "Searching 33 files for \"malloc\"\n\nP:\\Ls\\ld44\\bactorial.cpp:\n  107      World.ObjectCount = 10;\n  108      World.Objects = Objects;\n  109:     World.Positions = (v2 *)malloc(sizeof(v2) * World.ObjectCount);\n  110:     World.Velocities = (v2 *)malloc(sizeof(v2) * World.ObjectCount);\n  111  \n  112      for (u32 i=0; i<World.ObjectCount; ++i) {\n  ...\n  116      }\n  117  \n  118:     World.Tree.Root = (quad_tree_node *)malloc(MAX_NODE_COUNT * sizeof(quad_tree_node));\n  119  \n  120      BactorialUpdateWorld(1.0f/60.0f);\n\nP:\\Ls\\ld44\\wasm_bactorial.cpp:\n    1  #include <stdio.h>\n    2  #include <stdint.h>\n    3: #include <malloc.h>\n    4  #include <math.h>\n    5  #include <emscripten/emscripten.h>\n\nP:\\Ls\\ld44\\build\\main.js:\n    1: var Module=typeof Module!==\"undefined\"?Module:{};var moduleOverrides={};var key;for(key in Module){if(Module.hasOwnProperty(key)){moduleOverrides[key]=Module[key]}}Module[\"arguments\"]=[];Module[\"thisProgram\"]=\"./this.program\";Module[\"quit\"]=function(status,toThrow){throw toThrow};Module[\"preRun\"]=[];Module[\"postRun\"]=[];var ENVIRONMENT_IS_WEB=false;var ENVIRONMENT_IS_WORKER=false;var ENVIRONMENT_IS_NODE=false;var ENVIRONMENT_IS_SHELL=false;ENVIRONMENT_IS_WEB=typeof window===\"object\";ENVIRONMENT_IS_WORKER=typeof importScripts===\"function\";ENVIRONMENT_IS_NODE=typeof process===\"object\"&&typeof require===\"function\"&&!ENVIRONMENT_IS_WEB&&!ENVIRONMENT_IS_WORKER;ENVIRONMENT_IS_SHELL=!ENVIRONMENT_IS_WEB&&!ENVIRONMENT_IS_NODE&&!ENVIRONMENT_IS_WORKER;var scriptDirectory=\"\";function locateFile(path){if(Module[\"locateFile\"]){return Module[\"locateFile\"](path,scriptDirectory)}else{return scriptDirectory+path}}if(ENVIRONMENT_IS_NODE){scriptDirectory=__dirname+\"/\";var nodeFS;var nodePath;Module[\"read\"]=function shell_read(filename,binary){var ret;if(!nodeFS)nodeFS=require(\"fs\");if(!nodePath)nodePath=require(\"path\");filename=nodePath[\"normalize\"](filename);ret=nodeFS[\"readFileSync\"](filename);return binary?ret:ret.toString()};Module[\"readBinary\"]=function readBinary(filename){var ret=Module[\"read\"](filename,true);if(!ret.buffer){ret=new Uint8Array(ret)}assert(ret.buffer);return ret};if(process[\"argv\"].length>1){Module[\"thisProgram\"]=process[\"argv\"][1].replace(/\\\\/g,\"/\")}Module[\"arguments\"]=process[\"argv\"].slice(2);if(typeof module!==\"undefined\"){module[\"exports\"]=Module}process[\"on\"](\"uncaughtException\",function(ex){if(!(ex instanceof ExitStatus)){throw ex}});process[\"on\"](\"unhandledRejection\",abort);Module[\"quit\"]=function(status){process[\"exit\"](status)};Module[\"inspect\"]=function(){return\"[Emscripten Module object]\"}}else if(ENVIRONMENT_IS_SHELL){if(typeof read!=\"undefined\"){Module[\"read\"]=function shell_read(f){return read(f)}}Module[\"readBinary\"]=function readBinary(f){var data;if(typeof readbuffer===\"function\"){return new Uint8Array(readbuffer(f))}data=read(f,\"binary\");assert(typeof data===\"object\");return data};if(typeof scriptArgs!=\"undefined\"){Module[\"arguments\"]=scriptArgs}else if(typeof arguments!=\"undefined\"){Module[\"arguments\"]=arguments}if(typeof quit===\"function\"){Module[\"quit\"]=function(status){quit(status)}}}else if(ENVIRONMENT_IS_WEB||ENVIRONMENT_IS_WORKER){if(ENVIRONMENT_IS_WORKER){scriptDirectory=self.location.href}else if(document.currentScript){scriptDirectory=document.currentScript.src}if(scriptDirectory.indexOf(\"blob:\")!==0){scriptDirectory=scriptDirectory.substr(0,scriptDirectory.lastIndexOf(\"/\")+1)}else{scriptDirectory=\"\"}Module[\"read\"]=function shell_read(url){var xhr=new XMLHttpRequest;xhr.open(\"GET\",url,false);xhr.send(null);return xhr.responseText};if(ENVIRONMENT_IS_WORKER){Module[\"readBinary\"]=function readBinary(url){var xhr=new XMLHttpRequest;xhr.open(\"GET\",url,false);xhr.responseType=\"arraybuffer\";xhr.send(null);return new Uint8Array(xhr.response)}}Module[\"readAsync\"]=function readAsync(url,onload,onerror){var xhr=new XMLHttpRequest;xhr.open(\"GET\",url,true);xhr.responseType=\"arraybuffer\";xhr.onload=function xhr_onload(){if(xhr.status==200||xhr.status==0&&xhr.response){onload(xhr.response);return}onerror()};xhr.onerror=onerror;xhr.send(null)};Module[\"setWindowTitle\"]=function(title){document.title=title}}else{}var out=Module[\"print\"]||(typeof console!==\"undefined\"?console.log.bind(console):typeof print!==\"undefined\"?print:null);var err=Module[\"printErr\"]||(typeof printErr!==\"undefined\"?printErr:typeof console!==\"undefined\"&&console.warn.bind(console)||out);for(key in moduleOverrides){if(moduleOverrides.hasOwnProperty(key)){Module[key]=moduleOverrides[key]}}moduleOverrides=undefined;var STACK_ALIGN=16;function dynamicAlloc(size){var ret=HEAP32[DYNAMICTOP_PTR>>2];var end=ret+size+15&-16;if(end<=_emscripten_get_heap_size()){HEAP32[DYNAMICTOP_PTR>>2]=end}else{return 0}return ret}function getNativeTypeSize(type){switch(type){case\"i1\":case\"i8\":return 1;case\"i16\":return 2;case\"i32\":return 4;case\"i64\":return 8;case\"float\":return 4;case\"double\":return 8;default:{if(type[type.length-1]===\"*\"){return 4}else if(type[0]===\"i\"){var bits=parseInt(type.substr(1));assert(bits%8===0,\"getNativeTypeSize invalid bits \"+bits+\", type \"+type);return bits/8}else{return 0}}}}function warnOnce(text){if(!warnOnce.shown)warnOnce.shown={};if(!warnOnce.shown[text]){warnOnce.shown[text]=1;err(text)}}var asm2wasmImports={\"f64-rem\":function(x,y){return x%y},\"debugger\":function(){debugger}};var jsCallStartIndex=1;var functionPointers=new Array(0);function convertJsFunctionToWasm(func,sig){var typeSection=[1,0,1,96];var sigRet=sig.slice(0,1);var sigParam=sig.slice(1);var typeCodes={\"i\":127,\"j\":126,\"f\":125,\"d\":124};typeSection.push(sigParam.length);for(var i=0;i<sigParam.length;++i){typeSection.push(typeCodes[sigParam[i]])}if(sigRet==\"v\"){typeSection.push(0)}else{typeSection=typeSection.concat([1,typeCodes[sigRet]])}typeSection[1]=typeSection.length-2;var bytes=new Uint8Array([0,97,115,109,1,0,0,0].concat(typeSection,[2,7,1,1,101,1,102,0,0,7,5,1,1,102,0,0]));var module=new WebAssembly.Module(bytes);var instance=new WebAssembly.Instance(module,{e:{f:func}});var wrappedFunc=instance.exports.f;return wrappedFunc}var funcWrappers={};function dynCall(sig,ptr,args){if(args&&args.length){return Module[\"dynCall_\"+sig].apply(null,[ptr].concat(args))}else{return Module[\"dynCall_\"+sig].call(null,ptr)}}var tempRet0=0;var setTempRet0=function(value){tempRet0=value};var getTempRet0=function(){return tempRet0};if(typeof WebAssembly!==\"object\"){err(\"no native wasm support detected\")}function getValue(ptr,type,noSafe){type=type||\"i8\";if(type.charAt(type.length-1)===\"*\")type=\"i32\";switch(type){case\"i1\":return HEAP8[ptr>>0];case\"i8\":return HEAP8[ptr>>0];case\"i16\":return HEAP16[ptr>>1];case\"i32\":return HEAP32[ptr>>2];case\"i64\":return HEAP32[ptr>>2];case\"float\":return HEAPF32[ptr>>2];case\"double\":return HEAPF64[ptr>>3];default:abort(\"invalid type for getValue: \"+type)}return null}var wasmMemory;var wasmTable;var ABORT=false;var EXITSTATUS=0;function assert(condition,text){if(!condition){abort(\"Assertion failed: \"+text)}}function getCFunc(ident){var func=Module[\"_\"+ident];assert(func,\"Cannot call unknown function \"+ident+\", make sure it is exported\");return func}function ccall(ident,returnType,argTypes,args,opts){var toC={\"string\":function(str){var ret=0;if(str!==null&&str!==undefined&&str!==0){var len=(str.length<<2)+1;ret=stackAlloc(len);stringToUTF8(str,ret,len)}return ret},\"array\":function(arr){var ret=stackAlloc(arr.length);writeArrayToMemory(arr,ret);return ret}};function convertReturnValue(ret){if(returnType===\"string\")return UTF8ToString(ret);if(returnType===\"boolean\")return Boolean(ret);return ret}var func=getCFunc(ident);var cArgs=[];var stack=0;if(args){for(var i=0;i<args.length;i++){var converter=toC[argTypes[i]];if(converter){if(stack===0)stack=stackSave();cArgs[i]=converter(args[i])}else{cArgs[i]=args[i]}}}var ret=func.apply(null,cArgs);ret=convertReturnValue(ret);if(stack!==0)stackRestore(stack);return ret}function cwrap(ident,returnType,argTypes,opts){argTypes=argTypes||[];var numericArgs=argTypes.every(function(type){return type===\"number\"});var numericRet=returnType!==\"string\";if(numericRet&&numericArgs&&!opts){return getCFunc(ident)}return function(){return ccall(ident,returnType,argTypes,arguments,opts)}}function setValue(ptr,value,type,noSafe){type=type||\"i8\";if(type.charAt(type.length-1)===\"*\")type=\"i32\";switch(type){case\"i1\":HEAP8[ptr>>0]=value;break;case\"i8\":HEAP8[ptr>>0]=value;break;case\"i16\":HEAP16[ptr>>1]=value;break;case\"i32\":HEAP32[ptr>>2]=value;break;case\"i64\":tempI64=[value>>>0,(tempDouble=value,+Math_abs(tempDouble)>=1?tempDouble>0?(Math_min(+Math_floor(tempDouble/4294967296),4294967295)|0)>>>0:~~+Math_ceil((tempDouble-+(~~tempDouble>>>0))/4294967296)>>>0:0)],HEAP32[ptr>>2]=tempI64[0],HEAP32[ptr+4>>2]=tempI64[1];break;case\"float\":HEAPF32[ptr>>2]=value;break;case\"double\":HEAPF64[ptr>>3]=value;break;default:abort(\"invalid type for setValue: \"+type)}}var ALLOC_NONE=3;var UTF8Decoder=typeof TextDecoder!==\"undefined\"?new TextDecoder(\"utf8\"):undefined;function UTF8ArrayToString(u8Array,idx,maxBytesToRead){var endIdx=idx+maxBytesToRead;var endPtr=idx;while(u8Array[endPtr]&&!(endPtr>=endIdx))++endPtr;if(endPtr-idx>16&&u8Array.subarray&&UTF8Decoder){return UTF8Decoder.decode(u8Array.subarray(idx,endPtr))}else{var str=\"\";while(idx<endPtr){var u0=u8Array[idx++];if(!(u0&128)){str+=String.fromCharCode(u0);continue}var u1=u8Array[idx++]&63;if((u0&224)==192){str+=String.fromCharCode((u0&31)<<6|u1);continue}var u2=u8Array[idx++]&63;if((u0&240)==224){u0=(u0&15)<<12|u1<<6|u2}else{u0=(u0&7)<<18|u1<<12|u2<<6|u8Array[idx++]&63}if(u0<65536){str+=String.fromCharCode(u0)}else{var ch=u0-65536;str+=String.fromCharCode(55296|ch>>10,56320|ch&1023)}}}return str}function UTF8ToString(ptr,maxBytesToRead){return ptr?UTF8ArrayToString(HEAPU8,ptr,maxBytesToRead):\"\"}function stringToUTF8Array(str,outU8Array,outIdx,maxBytesToWrite){if(!(maxBytesToWrite>0))return 0;var startIdx=outIdx;var endIdx=outIdx+maxBytesToWrite-1;for(var i=0;i<str.length;++i){var u=str.charCodeAt(i);if(u>=55296&&u<=57343){var u1=str.charCodeAt(++i);u=65536+((u&1023)<<10)|u1&1023}if(u<=127){if(outIdx>=endIdx)break;outU8Array[outIdx++]=u}else if(u<=2047){if(outIdx+1>=endIdx)break;outU8Array[outIdx++]=192|u>>6;outU8Array[outIdx++]=128|u&63}else if(u<=65535){if(outIdx+2>=endIdx)break;outU8Array[outIdx++]=224|u>>12;outU8Array[outIdx++]=128|u>>6&63;outU8Array[outIdx++]=128|u&63}else{if(outIdx+3>=endIdx)break;outU8Array[outIdx++]=240|u>>18;outU8Array[outIdx++]=128|u>>12&63;outU8Array[outIdx++]=128|u>>6&63;outU8Array[outIdx++]=128|u&63}}outU8Array[outIdx]=0;return outIdx-startIdx}function stringToUTF8(str,outPtr,maxBytesToWrite){return stringToUTF8Array(str,HEAPU8,outPtr,maxBytesToWrite)}function lengthBytesUTF8(str){var len=0;for(var i=0;i<str.length;++i){var u=str.charCodeAt(i);if(u>=55296&&u<=57343)u=65536+((u&1023)<<10)|str.charCodeAt(++i)&1023;if(u<=127)++len;else if(u<=2047)len+=2;else if(u<=65535)len+=3;else len+=4}return len}var UTF16Decoder=typeof TextDecoder!==\"undefined\"?new TextDecoder(\"utf-16le\"):undefined;function writeArrayToMemory(array,buffer){HEAP8.set(array,buffer)}function writeAsciiToMemory(str,buffer,dontAddNull){for(var i=0;i<str.length;++i){HEAP8[buffer++>>0]=str.charCodeAt(i)}if(!dontAddNull)HEAP8[buffer>>0]=0}function demangle(func){return func}function demangleAll(text){var regex=/__Z[\\w\\d_]+/g;return text.replace(regex,function(x){var y=demangle(x);return x===y?x:y+\" [\"+x+\"]\"})}function jsStackTrace(){var err=new Error;if(!err.stack){try{throw new Error(0)}catch(e){err=e}if(!err.stack){return\"(no stack trace available)\"}}return err.stack.toString()}var WASM_PAGE_SIZE=65536;var buffer,HEAP8,HEAPU8,HEAP16,HEAPU16,HEAP32,HEAPU32,HEAPF32,HEAPF64;function updateGlobalBufferViews(){Module[\"HEAP8\"]=HEAP8=new Int8Array(buffer);Module[\"HEAP16\"]=HEAP16=new Int16Array(buffer);Module[\"HEAP32\"]=HEAP32=new Int32Array(buffer);Module[\"HEAPU8\"]=HEAPU8=new Uint8Array(buffer);Module[\"HEAPU16\"]=HEAPU16=new Uint16Array(buffer);Module[\"HEAPU32\"]=HEAPU32=new Uint32Array(buffer);Module[\"HEAPF32\"]=HEAPF32=new Float32Array(buffer);Module[\"HEAPF64\"]=HEAPF64=new Float64Array(buffer)}var STACK_BASE=3200,DYNAMIC_BASE=5246080,DYNAMICTOP_PTR=2944;var TOTAL_STACK=5242880;var INITIAL_TOTAL_MEMORY=Module[\"TOTAL_MEMORY\"]||16777216;if(INITIAL_TOTAL_MEMORY<TOTAL_STACK)err(\"TOTAL_MEMORY should be larger than TOTAL_STACK, was \"+INITIAL_TOTAL_MEMORY+\"! (TOTAL_STACK=\"+TOTAL_STACK+\")\");if(Module[\"buffer\"]){buffer=Module[\"buffer\"]}else{if(typeof WebAssembly===\"object\"&&typeof WebAssembly.Memory===\"function\"){wasmMemory=new WebAssembly.Memory({\"initial\":INITIAL_TOTAL_MEMORY/WASM_PAGE_SIZE,\"maximum\":INITIAL_TOTAL_MEMORY/WASM_PAGE_SIZE});buffer=wasmMemory.buffer}else{buffer=new ArrayBuffer(INITIAL_TOTAL_MEMORY)}}updateGlobalBufferViews();HEAP32[DYNAMICTOP_PTR>>2]=DYNAMIC_BASE;function callRuntimeCallbacks(callbacks){while(callbacks.length>0){var callback=callbacks.shift();if(typeof callback==\"function\"){callback();continue}var func=callback.func;if(typeof func===\"number\"){if(callback.arg===undefined){Module[\"dynCall_v\"](func)}else{Module[\"dynCall_vi\"](func,callback.arg)}}else{func(callback.arg===undefined?null:callback.arg)}}}var __ATPRERUN__=[];var __ATINIT__=[];var __ATMAIN__=[];var __ATPOSTRUN__=[];var runtimeInitialized=false;var runtimeExited=false;function preRun(){if(Module[\"preRun\"]){if(typeof Module[\"preRun\"]==\"function\")Module[\"preRun\"]=[Module[\"preRun\"]];while(Module[\"preRun\"].length){addOnPreRun(Module[\"preRun\"].shift())}}callRuntimeCallbacks(__ATPRERUN__)}function ensureInitRuntime(){if(runtimeInitialized)return;runtimeInitialized=true;callRuntimeCallbacks(__ATINIT__)}function preMain(){callRuntimeCallbacks(__ATMAIN__)}function exitRuntime(){runtimeExited=true}function postRun(){if(Module[\"postRun\"]){if(typeof Module[\"postRun\"]==\"function\")Module[\"postRun\"]=[Module[\"postRun\"]];while(Module[\"postRun\"].length){addOnPostRun(Module[\"postRun\"].shift())}}callRuntimeCallbacks(__ATPOSTRUN__)}function addOnPreRun(cb){__ATPRERUN__.unshift(cb)}function addOnPostRun(cb){__ATPOSTRUN__.unshift(cb)}var Math_abs=Math.abs;var Math_ceil=Math.ceil;var Math_floor=Math.floor;var Math_min=Math.min;var runDependencies=0;var runDependencyWatcher=null;var dependenciesFulfilled=null;function addRunDependency(id){runDependencies++;if(Module[\"monitorRunDependencies\"]){Module[\"monitorRunDependencies\"](runDependencies)}}function removeRunDependency(id){runDependencies--;if(Module[\"monitorRunDependencies\"]){Module[\"monitorRunDependencies\"](runDependencies)}if(runDependencies==0){if(runDependencyWatcher!==null){clearInterval(runDependencyWatcher);runDependencyWatcher=null}if(dependenciesFulfilled){var callback=dependenciesFulfilled;dependenciesFulfilled=null;callback()}}}Module[\"preloadedImages\"]={};Module[\"preloadedAudios\"]={};var dataURIPrefix=\"data:application/octet-stream;base64,\";function isDataURI(filename){return String.prototype.startsWith?filename.startsWith(dataURIPrefix):filename.indexOf(dataURIPrefix)===0}var wasmBinaryFile=\"main.wasm\";if(!isDataURI(wasmBinaryFile)){wasmBinaryFile=locateFile(wasmBinaryFile)}function getBinary(){try{if(Module[\"wasmBinary\"]){return new Uint8Array(Module[\"wasmBinary\"])}if(Module[\"readBinary\"]){return Module[\"readBinary\"](wasmBinaryFile)}else{throw\"both async and sync fetching of the wasm failed\"}}catch(err){abort(err)}}function getBinaryPromise(){if(!Module[\"wasmBinary\"]&&(ENVIRONMENT_IS_WEB||ENVIRONMENT_IS_WORKER)&&typeof fetch===\"function\"){return fetch(wasmBinaryFile,{credentials:\"same-origin\"}).then(function(response){if(!response[\"ok\"]){throw\"failed to load wasm binary file at '\"+wasmBinaryFile+\"'\"}return response[\"arrayBuffer\"]()}).catch(function(){return getBinary()})}return new Promise(function(resolve,reject){resolve(getBinary())})}function createWasm(env){var info={\"env\":env,\"global\":{\"NaN\":NaN,Infinity:Infinity},\"global.Math\":Math,\"asm2wasm\":asm2wasmImports};function receiveInstance(instance,module){var exports=instance.exports;Module[\"asm\"]=exports;removeRunDependency(\"wasm-instantiate\")}addRunDependency(\"wasm-instantiate\");if(Module[\"instantiateWasm\"]){try{return Module[\"instantiateWasm\"](info,receiveInstance)}catch(e){err(\"Module.instantiateWasm callback failed with error: \"+e);return false}}function receiveInstantiatedSource(output){receiveInstance(output[\"instance\"])}function instantiateArrayBuffer(receiver){getBinaryPromise().then(function(binary){return WebAssembly.instantiate(binary,info)}).then(receiver,function(reason){err(\"failed to asynchronously prepare wasm: \"+reason);abort(reason)})}if(!Module[\"wasmBinary\"]&&typeof WebAssembly.instantiateStreaming===\"function\"&&!isDataURI(wasmBinaryFile)&&typeof fetch===\"function\"){WebAssembly.instantiateStreaming(fetch(wasmBinaryFile,{credentials:\"same-origin\"}),info).then(receiveInstantiatedSource,function(reason){err(\"wasm streaming compile failed: \"+reason);err(\"falling back to ArrayBuffer instantiation\");instantiateArrayBuffer(receiveInstantiatedSource)})}else{instantiateArrayBuffer(receiveInstantiatedSource)}return{}}Module[\"asm\"]=function(global,env,providedBuffer){env[\"memory\"]=wasmMemory;env[\"table\"]=wasmTable=new WebAssembly.Table({\"initial\":0,\"maximum\":0,\"element\":\"anyfunc\"});env[\"__memory_base\"]=1024;env[\"__table_base\"]=0;var exports=createWasm(env);return exports};var tempDoublePtr=3184;function _emscripten_get_heap_size(){return HEAP8.length}function abortOnCannotGrowMemory(requestedSize){abort(\"OOM\")}function _emscripten_resize_heap(requestedSize){abortOnCannotGrowMemory(requestedSize)}function _llvm_trap(){abort(\"trap!\")}function _emscripten_memcpy_big(dest,src,num){HEAPU8.set(HEAPU8.subarray(src,src+num),dest)}function ___setErrNo(value){if(Module[\"___errno_location\"])HEAP32[Module[\"___errno_location\"]()>>2]=value;return value}var ASSERTIONS=false;var asmGlobalArg={};var asmLibraryArg={\"abort\":abort,\"setTempRet0\":setTempRet0,\"getTempRet0\":getTempRet0,\"___setErrNo\":___setErrNo,\"_emscripten_get_heap_size\":_emscripten_get_heap_size,\"_emscripten_memcpy_big\":_emscripten_memcpy_big,\"_emscripten_resize_heap\":_emscripten_resize_heap,\"_llvm_trap\":_llvm_trap,\"abortOnCannotGrowMemory\":abortOnCannotGrowMemory,\"tempDoublePtr\":tempDoublePtr,\"DYNAMICTOP_PTR\":DYNAMICTOP_PTR};var asm=Module[\"asm\"](asmGlobalArg,asmLibraryArg,buffer);Module[\"asm\"]=asm;var _BactorialInitWorld=Module[\"_BactorialInitWorld\"]=function(){return Module[\"asm\"][\"_BactorialInitWorld\"].apply(null,arguments)};var _BactorialUpdateWorld=Module[\"_BactorialUpdateWorld\"]=function(){return Module[\"asm\"][\"_BactorialUpdateWorld\"].apply(null,arguments)};var ___errno_location=Module[\"___errno_location\"]=function(){return Module[\"asm\"][\"___errno_location\"].apply(null,arguments)};var _free=Module[\"_free\"]=function(){return Module[\"asm\"][\"_free\"].apply(null,arguments)};var _malloc=Module[\"_malloc\"]=function(){return Module[\"asm\"][\"_malloc\"].apply(null,arguments)};var _memcpy=Module[\"_memcpy\"]=function(){return Module[\"asm\"][\"_memcpy\"].apply(null,arguments)};var _memset=Module[\"_memset\"]=function(){return Module[\"asm\"][\"_memset\"].apply(null,arguments)};var _sbrk=Module[\"_sbrk\"]=function(){return Module[\"asm\"][\"_sbrk\"].apply(null,arguments)};var establishStackSpace=Module[\"establishStackSpace\"]=function(){return Module[\"asm\"][\"establishStackSpace\"].apply(null,arguments)};var stackAlloc=Module[\"stackAlloc\"]=function(){return Module[\"asm\"][\"stackAlloc\"].apply(null,arguments)};var stackRestore=Module[\"stackRestore\"]=function(){return Module[\"asm\"][\"stackRestore\"].apply(null,arguments)};var stackSave=Module[\"stackSave\"]=function(){return Module[\"asm\"][\"stackSave\"].apply(null,arguments)};Module[\"asm\"]=asm;Module[\"ccall\"]=ccall;Module[\"cwrap\"]=cwrap;Module[\"getValue\"]=getValue;function ExitStatus(status){this.name=\"ExitStatus\";this.message=\"Program terminated with exit(\"+status+\")\";this.status=status}ExitStatus.prototype=new Error;ExitStatus.prototype.constructor=ExitStatus;dependenciesFulfilled=function runCaller(){if(!Module[\"calledRun\"])run();if(!Module[\"calledRun\"])dependenciesFulfilled=runCaller};function run(args){args=args||Module[\"arguments\"];if(runDependencies>0){return}preRun();if(runDependencies>0)return;if(Module[\"calledRun\"])return;function doRun(){if(Module[\"calledRun\"])return;Module[\"calledRun\"]=true;if(ABORT)return;ensureInitRuntime();preMain();if(Module[\"onRuntimeInitialized\"])Module[\"onRuntimeInitialized\"]();postRun()}if(Module[\"setStatus\"]){Module[\"setStatus\"](\"Running...\");setTimeout(function(){setTimeout(function(){Module[\"setStatus\"](\"\")},1);doRun()},1)}else{doRun()}}Module[\"run\"]=run;function abort(what){if(Module[\"onAbort\"]){Module[\"onAbort\"](what)}if(what!==undefined){out(what);err(what);what=JSON.stringify(what)}else{what=\"\"}ABORT=true;EXITSTATUS=1;throw\"abort(\"+what+\"). Build with -s ASSERTIONS=1 for more info.\"}Module[\"abort\"]=abort;if(Module[\"preInit\"]){if(typeof Module[\"preInit\"]==\"function\")Module[\"preInit\"]=[Module[\"preInit\"]];while(Module[\"preInit\"].length>0){Module[\"preInit\"].pop()()}}Module[\"noExitRuntime\"]=true;run();\n    2  \n\nP:\\Ls\\ld44\\build\\main.wasm:\n    <binary>\n\nP:\\Ls\\ld44\\build\\.vs\\win_bactorial\\v16\\ipch\\AutoPCH\\5e9c59eb583d468d\\WIN_BACTORIAL.ipch:\n    <binary>\n\nP:\\Ls\\ld44\\include\\pcg_extras.hpp:\n  484          uneven_copy(buffer, dest, dest+size);\n  485      } else {\n  486:         uint32_t* buffer = (uint32_t*) malloc(GEN_SIZE * FROM_ELEMS);\n  487          generator.generate(buffer, buffer+FROM_ELEMS);\n  488          uneven_copy(buffer, dest, dest+size);\n\n114 matches across 6 files\n",
+			"settings":
+			{
+				"buffer_size": 21389,
+				"line_ending": "Windows",
+				"name": "Find Results",
+				"scratch": true
 			}
 		}
 	],
@@ -85,16 +257,16 @@
 		"selected_items":
 		[
 			[
+				"low",
+				"Convert Case: Lower Case"
+			],
+			[
 				"mini",
 				"View: Toggle Minimap"
 			],
 			[
 				"map",
 				"View: Toggle Minimap"
-			],
-			[
-				"low",
-				"Convert Case: Lower Case"
 			],
 			[
 				"c",
@@ -181,6 +353,17 @@
 	],
 	"file_history":
 	[
+		"/P/Ls/ld44/.gitignore",
+		"/P/Ls/ld44/main.cpp",
+		"/P/Ls/neuro/win32_ls_neuro.cpp",
+		"/P/Ls/neuro/ls_neuro.cpp",
+		"/P/Ls/ld44/ls_math.h",
+		"/P/Ls/ld44/js/three.js",
+		"/P/Ls/ld44/bactorial.cpp",
+		"/P/Ls/ld44/include/pcg_extras.hpp",
+		"/P/Ls/ld44/include/pcg_uint128.hpp",
+		"/P/Ls/ld44/build.bat",
+		"/P/Ls/ld44/win_bactorial.cpp",
 		"/P/Ls/ld44/build/main.html",
 		"/P/Ls/ld44/frontend.html",
 		"/P/Ls/ld44/build/main.js",
@@ -297,28 +480,18 @@
 		"/P/Ls/znalka/template_generator.pro.user",
 		"/P/Ls/znalka/data/index - Copy.html",
 		"/P/printware/orders.log",
-		"/P/Ls/znalka/data/motherfuckingwebsite.com.html",
-		"/P/Ls/znalka/data/data",
-		"/P/Ls/znalka/data/style.css",
-		"/usr/include/x86_64-linux-gnu/bits/types.h",
-		"/home/stas/projects/znalka/sqlite_test.cpp",
-		"/home/stas/projects/znalka/sqlite_test.c",
-		"/usr/include/x86_64-linux-gnu/sys/socket.h",
-		"/home/stas/projects/znalka/blog.cpp",
-		"/home/stas/projects/znalka/data/rendered_templates.h",
-		"/media/stas/9CBCE9D0BCE9A4CC/Projects/Ls/cascade/Docs/ui_spec_demo.pks",
-		"/home/stas/projects/znalka/data/index.html",
-		"/home/stas/projects/znalka/ls/ls_serializer.h"
+		"/P/Ls/znalka/data/motherfuckingwebsite.com.html"
 	],
 	"find":
 	{
-		"height": 34.0
+		"height": 56.0
 	},
 	"find_in_files":
 	{
-		"height": 126.0,
+		"height": 205.0,
 		"where_history":
 		[
+			""
 		]
 	},
 	"find_state":
@@ -326,6 +499,71 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"build",
+			"Object",
+			"(r32)(pcg32_random_r(&rng1) % 100) / 100.0f",
+			"rng1",
+			"World.Objects[i]",
+			"1000",
+			"World.ObjectCount",
+			"ObjectCount",
+			" = 10",
+			"Object.P",
+			"attrac",
+			"consol",
+			"velocities",
+			"\"));\n",
+			"objectsData",
+			"worldData",
+			"objectsData",
+			"positions",
+			"objectsData",
+			"malloc",
+			"Objects",
+			"GlobalNodeIndex",
+			"buildqu",
+			"Result",
+			"objectcount",
+			"AttractorActive",
+			"DrawQuadTree",
+			"selected",
+			"wentdo",
+			"v2",
+			"BlackBrush",
+			"QRect",
+			"Object",
+			"Selected",
+			"BuildQuadTree",
+			"Object.",
+			"PIndex",
+			"P[",
+			"rect",
+			"PCount",
+			"real32",
+			"Min.",
+			"Max.",
+			"Min.X",
+			"HasParticles",
+			"P",
+			"internal",
+			"real32",
+			"Real32",
+			"real32",
+			"Real32",
+			"real32",
+			"uint32",
+			"bool32",
+			"r32",
+			"gs",
+			"u32",
+			"pcg32_srandom_r",
+			"pcg32_random_t",
+			"nit",
+			".w",
+			"RenderTarget",
+			"t",
+			"createfa",
+			"Console",
 			"ctx",
 			"data",
 			"ObjectCount",
@@ -345,6 +583,7 @@
 		"regex": false,
 		"replace_history":
 		[
+			""
 		],
 		"reverse": false,
 		"show_context": true,
@@ -355,39 +594,70 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 7,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "build.bat",
+					"file": "build_wasm.bat",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 483,
+						"buffer_size": 302,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								337,
-								337
+								87,
+								87
 							]
 						],
 						"settings":
 						{
+							"history_list_is_closing": true,
 							"syntax": "Packages/Batch File/Batch File.sublime-syntax"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 36,
 					"type": "text"
 				},
 				{
 					"buffer": 1,
+					"file": "win_bactorial.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1631,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1434,
+								1434
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2484.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 18,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
 					"file": "/P/general/wasm_hell.bat",
 					"semi_transient": false,
 					"settings":
@@ -411,24 +681,24 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 4,
+					"stack_index": 41,
 					"type": "text"
 				},
 				{
-					"buffer": 2,
-					"file": "main.cpp",
+					"buffer": 3,
+					"file": "wasm_bactorial.cpp",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 886,
+						"buffer_size": 420,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								871,
-								871
+								403,
+								403
 							]
 						],
 						"settings":
@@ -441,11 +711,334 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 10,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 0,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 35,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "build/main.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1279,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								240,
+								240
+							]
+						],
+						"settings":
+						{
+							"history_list_is_closing": true,
+							"syntax": "Packages/HTML/HTML.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "build/bactorial_wasm_loader.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1255,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								161,
+								161
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 8,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "win_bactorial.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 15186,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2367,
+								2367
+							]
+						],
+						"settings":
+						{
+							"history_list_is_closing": true,
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2369.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "bactorial.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 6115,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1899,
+								1904
+							]
+						],
+						"settings":
+						{
+							"history_list_is_closing": true,
+							"spell_check": true,
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1532.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "pcg_basic.c",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3744,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3686,
+								3686
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2712.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 29,
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "pcg_basic.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2520,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2037,
+								2037
+							]
+						],
+						"settings":
+						{
+							"spell_check": true,
+							"syntax": "Packages/C++/C++.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 657.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 32,
+					"type": "text"
+				},
+				{
+					"buffer": 11,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 0,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 38,
+					"type": "text"
+				},
+				{
+					"buffer": 12,
+					"file": "bactorial.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1242,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								222,
+								222
+							]
+						],
+						"settings":
+						{
+							"spell_check": true,
+							"syntax": "Packages/C++/C++.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
 					"stack_index": 3,
 					"type": "text"
 				},
 				{
-					"buffer": 3,
+					"buffer": 13,
+					"file": "build/main.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 20176,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 16,
+					"type": "text"
+				},
+				{
+					"buffer": 14,
+					"file": "main.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 515,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								187,
+								187
+							]
+						],
+						"settings":
+						{
+							"history_list_is_closing": true,
+							"syntax": "Packages/C++/C++.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 9,
+					"type": "text"
+				},
+				{
+					"buffer": 15,
 					"file": "build/main_custom.html",
 					"semi_transient": false,
 					"settings":
@@ -463,6 +1056,7 @@
 						],
 						"settings":
 						{
+							"history_list_is_closing": true,
 							"syntax": "Packages/HTML/HTML.sublime-syntax",
 							"tab_size": 2,
 							"translate_tabs_to_spaces": true
@@ -471,97 +1065,831 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 40,
 					"type": "text"
-				}
-			]
-		},
-		{
-			"selected": 2,
-			"sheets":
-			[
+				},
 				{
 					"buffer": 0,
-					"file": "build.bat",
+					"file": "build_wasm.bat",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 483,
+						"buffer_size": 302,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								483,
-								483
+								302,
+								302
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/Batch File/Batch File.sublime-syntax"
 						},
-						"translation.x": 42.0,
+						"translation.x": 0.0,
 						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 33,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "wasm_bactorial.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 420,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								186,
+								204
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 34,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "build/main.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1279,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								325,
+								325
+							]
+						],
+						"settings":
+						{
+							"history_list_is_closing": true,
+							"syntax": "Packages/HTML/HTML.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 57.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 7,
+					"type": "text"
+				},
+				{
+					"buffer": 16,
+					"file": "state.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 147,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 37,
+					"type": "text"
+				},
+				{
+					"buffer": 12,
+					"file": "bactorial.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1242,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								821,
+								821
+							]
+						],
+						"settings":
+						{
+							"spell_check": true,
+							"syntax": "Packages/C++/C++.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 504.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 31,
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "bactorial.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 6115,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2955,
+								2955
+							]
+						],
+						"settings":
+						{
+							"history_list_is_closing": true,
+							"spell_check": true,
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2308.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 26,
+					"type": "text"
+				},
+				{
+					"buffer": 17,
+					"file": "cascade_math.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 26022,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								7673,
+								7673
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 12448.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 25,
+					"type": "text"
+				},
+				{
+					"buffer": 18,
+					"file": "cascade_math.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1153,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1019,
+								1019
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1612.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 24,
+					"type": "text"
+				},
+				{
+					"buffer": 19,
+					"file": "/P/Ls/neuro/ls_neuro.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2535,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								874,
+								874
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1512.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 27,
+					"type": "text"
+				},
+				{
+					"buffer": 20,
+					"file": "include/pcg_extras.hpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 19553,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								16251,
+								16251
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 12448.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 30,
+					"type": "text"
+				},
+				{
+					"buffer": 21,
+					"file": "build.bat",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 488,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								359,
+								364
+							]
+						],
+						"settings":
+						{
+							"history_list_is_closing": true,
+							"syntax": "Packages/Batch File/Batch File.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 28,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "win_bactorial.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1631,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								202,
+								202
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 39,
+					"type": "text"
+				}
+			]
+		},
+		{
+			"selected": 3,
+			"sheets":
+			[
+				{
+					"buffer": 3,
+					"file": "wasm_bactorial.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 420,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								273,
+								273
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 12,
+					"type": "text"
+				},
+				{
+					"buffer": 14,
+					"file": "main.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 515,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"history_list_is_closing": true,
+							"syntax": "Packages/C++/C++.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 14,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "build/main.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1279,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								865,
+								865
+							]
+						],
+						"settings":
+						{
+							"history_list_is_closing": true,
+							"syntax": "Packages/HTML/HTML.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 252.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 13,
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "bactorial.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 6115,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								135,
+								135
+							]
+						],
+						"settings":
+						{
+							"history_list_is_closing": true,
+							"spell_check": true,
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "build/bactorial_wasm_loader.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1255,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								520,
+								520
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 336.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 6,
 					"type": "text"
 				},
 				{
-					"buffer": 2,
-					"file": "main.cpp",
+					"buffer": 22,
+					"file": "bactorial_wasm_loader.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 886,
+						"buffer_size": 1139,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								222,
-								222
+								524,
+								524
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/C++/C++.sublime-syntax"
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
+					"stack_index": 15,
 					"type": "text"
 				},
 				{
-					"buffer": 4,
-					"file": "win_bactorial.cpp",
+					"buffer": 23,
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 14292,
+						"buffer_size": 21389,
+						"regions":
+						{
+							"match":
+							{
+								"flags": 112,
+								"regions":
+								[
+									[
+										165,
+										171
+									],
+									[
+										241,
+										247
+									],
+									[
+										416,
+										422
+									],
+									[
+										620,
+										626
+									],
+									[
+										18692,
+										18698
+									],
+									[
+										18708,
+										18714
+									],
+									[
+										18751,
+										18757
+									],
+									[
+										21215,
+										21221
+									]
+								],
+								"scope": ""
+							}
+						},
+						"selection":
+						[
+							[
+								169,
+								169
+							]
+						],
+						"settings":
+						{
+							"detect_indentation": false,
+							"line_numbers": false,
+							"output_tag": 1,
+							"result_base_dir": "",
+							"result_file_regex": "^([^ \t].*):$",
+							"result_line_regex": "^ +([0-9]+):",
+							"scroll_past_end": true,
+							"syntax": "Packages/Default/Find Results.hidden-tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 17,
+					"type": "text"
+				},
+				{
+					"buffer": 12,
+					"file": "bactorial.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1242,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								14290,
-								14290
+								737,
+								737
 							]
 						],
 						"settings":
 						{
+							"spell_check": true,
 							"syntax": "Packages/C++/C++.sublime-syntax"
 						},
 						"translation.x": 0.0,
-						"translation.y": 9092.0,
+						"translation.y": 712.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 11,
+					"type": "text"
+				},
+				{
+					"buffer": 18,
+					"file": "cascade_math.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1153,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								263,
+								263
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 23,
+					"type": "text"
+				},
+				{
+					"buffer": 17,
+					"file": "cascade_math.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 26022,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2110,
+								2110
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 3240.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 20,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "win_bactorial.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 15186,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2315,
+								2320
+							]
+						],
+						"settings":
+						{
+							"history_list_is_closing": true,
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2260.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 21,
+					"file": "build.bat",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 488,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								162,
+								162
+							]
+						],
+						"settings":
+						{
+							"history_list_is_closing": true,
+							"syntax": "Packages/Batch File/Batch File.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 21,
+					"type": "text"
+				},
+				{
+					"buffer": 0,
+					"file": "build_wasm.bat",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 302,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								302,
+								302
+							]
+						],
+						"settings":
+						{
+							"history_list_is_closing": true,
+							"syntax": "Packages/Batch File/Batch File.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 19,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "win_bactorial.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1631,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1371,
+								1371
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2484.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 22,
 					"type": "text"
 				}
 			]
@@ -569,7 +1897,7 @@
 	],
 	"incremental_find":
 	{
-		"height": 34.0
+		"height": 56.0
 	},
 	"input":
 	{
@@ -617,7 +1945,7 @@
 	"project": "ld44.sublime-project",
 	"replace":
 	{
-		"height": 64.0
+		"height": 82.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -627,19 +1955,99 @@
 		"selected_items":
 		[
 			[
+				"wi",
+				"win_bactorial.cpp"
+			],
+			[
+				"win",
+				"win_bactorial.cpp"
+			],
+			[
+				"bact",
+				"bactorial.cpp"
+			],
+			[
+				"b",
+				"bactorial.cpp"
+			],
+			[
+				"",
+				"build\\main.html"
+			],
+			[
+				"main",
+				"build\\main.html"
+			],
+			[
+				"ba",
+				"bactorial.cpp"
+			],
+			[
+				"mai",
+				"build\\main.html"
+			],
+			[
+				"lo",
+				"build\\bactorial_wasm_loader.js"
+			],
+			[
+				"load",
+				"build\\bactorial_wasm_loader.js"
+			],
+			[
+				"m",
+				"build\\main.html"
+			],
+			[
+				"was",
+				"wasm_bactorial.cpp"
+			],
+			[
+				"mai.h",
+				"build\\main.html"
+			],
+			[
+				"bactor",
+				"bactorial.cpp"
+			],
+			[
+				"loader",
+				"build\\bactorial_wasm_loader.js"
+			],
+			[
+				"casca",
+				"cascade_math.cpp"
+			],
+			[
+				"buils_",
+				"build_wasm.bat"
+			],
+			[
 				"bui",
 				"build.bat"
 			],
 			[
-				"main",
-				"main.cpp"
+				"bac",
+				"bactorial.cpp"
+			],
+			[
+				"pcg",
+				"pcg_basic.h"
+			],
+			[
+				"wa",
+				"wasm_bactorial.cpp"
+			],
+			[
+				"main.h",
+				"build\\main.html"
+			],
+			[
+				"w",
+				"win_bactorial.cpp"
 			],
 			[
 				"win_",
-				"win_shi.cpp"
-			],
-			[
-				"win",
 				"win_shi.cpp"
 			],
 			[
@@ -683,10 +2091,6 @@
 				"flt.cpp"
 			],
 			[
-				"",
-				"string.h"
-			],
-			[
 				"comp",
 				"Data\\UI\\cascade_componets.pks"
 			],
@@ -721,10 +2125,6 @@
 			[
 				"picker",
 				"Data\\Shaders\\HuePicker.frag"
-			],
-			[
-				"casca",
-				"source\\cascade.h"
 			],
 			[
 				"pooks.",
@@ -1015,10 +2415,6 @@
 				"source\\cascade.cpp"
 			],
 			[
-				"w",
-				"source\\win32_cascade.cpp"
-			],
-			[
 				"ls_meta_generate",
 				"source\\ls_meta_generate.cpp"
 			],
@@ -1069,74 +2465,6 @@
 			[
 				"inde.",
 				"data\\index.html"
-			],
-			[
-				"admin",
-				"data\\admin.html"
-			],
-			[
-				"ma",
-				"main.cpp"
-			],
-			[
-				"bu",
-				"build.sh"
-			],
-			[
-				"fcgi",
-				"ls_fcgi.h"
-			],
-			[
-				"pag",
-				"data/templates/page.nos"
-			],
-			[
-				"trender",
-				"data/rendered_templates.h"
-			],
-			[
-				"app",
-				"app.cpp"
-			],
-			[
-				"fcg",
-				"ls_fcgi.h"
-			],
-			[
-				"page",
-				"data/templates/page.nos"
-			],
-			[
-				"no",
-				"data/templates/main.nos"
-			],
-			[
-				"blog",
-				"blog.cpp"
-			],
-			[
-				"page.",
-				"data/templates/page.nos"
-			],
-			[
-				"manin",
-				"data/templates/main.nos"
-			],
-			[
-				"main.",
-				"data/templates/main.nos"
-			],
-			[
-				"mian.",
-				"data/templates/main.nos"
-			],
-			[
-				"page.nose",
-				"template_generator.pro.user"
-			],
-			[
-				"mian",
-				"main.cpp"
 			]
 		],
 		"width": 0.0
@@ -1153,9 +2481,157 @@
 	"select_symbol":
 	{
 		"height": 392.0,
-		"last_filter": "loca",
+		"last_filter": "render",
 		"selected_items":
 		[
+			[
+				"render",
+				"Render"
+			],
+			[
+				"spaw",
+				"SPAWN_TIME"
+			],
+			[
+				"world",
+				"world"
+			],
+			[
+				"spawn",
+				"SPAWN_COST"
+			],
+			[
+				"object",
+				"object"
+			],
+			[
+				"UINT_MAX",
+				"UINT_MAX"
+			],
+			[
+				"Update",
+				"updateWorld"
+			],
+			[
+				"initw",
+				"BactorialInitWorld"
+			],
+			[
+				"BactorialInitWorld",
+				"BactorialInitWorld"
+			],
+			[
+				"UpdateWo",
+				"updateWorld"
+			],
+			[
+				"upda",
+				"updateWorld"
+			],
+			[
+				"initwo",
+				"BactorialInitWorld"
+			],
+			[
+				"objec",
+				"object"
+			],
+			[
+				"build",
+				"BuildQuadTree"
+			],
+			[
+				"BactorialUpdateWorld",
+				"BactorialUpdateWorld"
+			],
+			[
+				"draw",
+				"DrawQuadTree"
+			],
+			[
+				"LocateObjectWithP",
+				"LocateObjectWithP"
+			],
+			[
+				"updatewo",
+				"updateWorld"
+			],
+			[
+				"input",
+				"input"
+			],
+			[
+				"updatew",
+				"updateWorld"
+			],
+			[
+				"obje",
+				"object"
+			],
+			[
+				"selecte",
+				"BactorialSelectRect"
+			],
+			[
+				"max",
+				"MAX_NODE_COUNT"
+			],
+			[
+				"buldqu",
+				"BuildQuadTree"
+			],
+			[
+				"drawqu",
+				"DrawQuadTree"
+			],
+			[
+				"quad_",
+				"quad_tree_node"
+			],
+			[
+				"o",
+				"object"
+			],
+			[
+				"buil",
+				"BuildQuadTree"
+			],
+			[
+				"bui",
+				"BuildQuadTree"
+			],
+			[
+				"buildr",
+				"BuildQuadTree"
+			],
+			[
+				"buildqua",
+				"BuildQuadTree"
+			],
+			[
+				"worl",
+				"world"
+			],
+			[
+				"rect",
+				"RectDim"
+			],
+			[
+				"max_nod",
+				"MAX_NODE_COUNT"
+			],
+			[
+				"quad",
+				"quad_tree"
+			],
+			[
+				"initworl",
+				"BactorialInitWorld"
+			],
+			[
+				"state",
+				"state"
+			],
 			[
 				"loca",
 				"Location"
@@ -1175,10 +2651,6 @@
 			[
 				"ocate",
 				"LocateLineEnd"
-			],
-			[
-				"render",
-				"Render"
 			],
 			[
 				"inser",
@@ -1465,10 +2937,6 @@
 				"pooks_style"
 			],
 			[
-				"obje",
-				"object"
-			],
-			[
 				"debug_da",
 				"debug_data"
 			],
@@ -1527,151 +2995,11 @@
 			[
 				"pooks_te",
 				"pooks_text"
-			],
-			[
-				"vo_tre",
-				"vo_tree"
-			],
-			[
-				"pookspar",
-				"PooksParseStyle"
-			],
-			[
-				"duplica",
-				"DuplicateBranch"
-			],
-			[
-				"bui",
-				"pooks_build_info"
-			],
-			[
-				"final",
-				"PooksFinalizeLayout"
-			],
-			[
-				"loaddef",
-				"PooksLoadDefaultStyle"
-			],
-			[
-				"voro",
-				"vo_role"
-			],
-			[
-				"PushSimplePathStroke",
-				"PushSimplePathStroke"
-			],
-			[
-				"rectpath",
-				"MakeRoundedRectPath"
-			],
-			[
-				"rectpat",
-				"MakeRoundedRectPath"
-			],
-			[
-				"pushed",
-				"PushEditedBezierShape"
-			],
-			[
-				"stroke",
-				"PushSimplePathStroke"
-			],
-			[
-				"pushround",
-				"PushRoundedRect"
-			],
-			[
-				"framemme",
-				"FrameMemoryPush"
-			],
-			[
-				"frameme",
-				"FrameMemoryAlloc"
-			],
-			[
-				"renderer",
-				"renderer"
-			],
-			[
-				"pushro",
-				"PushRoundedRect"
-			],
-			[
-				"pushsim",
-				"PushSimplePathStroke"
-			],
-			[
-				"addrender",
-				"AddRenderCommand"
-			],
-			[
-				"AddRenderEntry",
-				"AddRenderEntry"
-			],
-			[
-				"pushrec",
-				"PushRect"
-			],
-			[
-				"push",
-				"PushRect"
-			],
-			[
-				"finaliz",
-				"PooksFinalizeLayout"
-			],
-			[
-				"pooks_sty",
-				"pooks_style"
-			],
-			[
-				"consolepr",
-				"ConsolePrintf"
-			],
-			[
-				"PushCircle",
-				"PushCircle"
-			],
-			[
-				"border",
-				"pooks_border"
-			],
-			[
-				"pooksparses",
-				"PooksParseStyle"
-			],
-			[
-				"pooksparsev",
-				"PooksParseValue"
-			],
-			[
-				"pooks_bo",
-				"pooks_border"
-			],
-			[
-				"pooks_v",
-				"pooks_val_"
-			],
-			[
-				"pooks_bor",
-				"pooks_border"
-			],
-			[
-				"domanual",
-				"PooksDoManualLayout"
-			],
-			[
-				"hsva",
-				"GetHSVAFromRGBA"
-			],
-			[
-				"rgba",
-				"RGBA"
 			]
 		],
 		"width": 592.0
 	},
-	"selected_group": 0,
+	"selected_group": 1,
 	"settings":
 	{
 	},

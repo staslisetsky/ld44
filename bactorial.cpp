@@ -1,6 +1,45 @@
 #include "include/pcg_basic.h"
 #include "include/pcg_basic.c"
 
+#define MAX_OBJECTS 100000
+#define MITOSIS_TIME 1.0f
+#define START_R 50
+
+static pcg32_random_t Rng;
+
+r32 
+RandomN()
+{
+    return (r32)(pcg32_random_r(&Rng) % 100) / 100.0f;
+}
+
+void
+DivideCell(object *Object)
+{
+    object New = {};
+
+    r32 Theta = RandomN() * PI * 2.0f;
+    v2 Direction = {(r32)sin(Theta), (r32)cos(Theta)};
+
+    u32 NewR = Object->Radius / 2;
+    Object->Radius /= 2;
+    New.Radius = NewR;
+
+    New.P = Object->P + Direction * (r32)NewR;
+
+    Object->P = Object->P - Direction * (r32)NewR;
+    Object->Mode = Mode_Idle;
+
+    r32 Speed = RandomN() * 5.0f;
+
+    Object->Velocity -= Speed * Direction;
+    New.Velocity += Speed * Direction;
+
+    New.Soul = RandomN();
+
+    World.Objects[World.ObjectCount++] = New;
+}
+
 void
 BuildQuadTree(quad_tree *Tree, quad_tree_node *Node, rect QRect, object *Objects, u32 Count, u32 MaxNodeCount, u32 ArrayOffset=0)
 {
@@ -65,6 +104,37 @@ BuildQuadTree(quad_tree *Tree, quad_tree_node *Node, rect QRect, object *Objects
     Node->CellSize = QRect.Max.x - QRect.Min.x;
 }
 
+void
+BactorialStabilizeColony()
+{
+    for (u32 i=0; i<World.ObjectCount; ++i) {
+        object *Me = World.Objects + i;
+
+        v2 Velocity = {};
+        for (u32 j=0; j<World.ObjectCount; ++j) {
+            if (j == i) {
+                continue;
+            }
+
+            object *They = World.Objects + j;
+            r32 Distance = Length(Me->P - They->P);
+
+            Distance = Max_r32(0.001f, Distance - (Me->Radius + They->Radius));
+
+            if (Distance > 0.0f) {
+                v2 Direction = (Me->P - They->P) / (Distance * Distance);
+                Velocity += Direction * (1.0 / Distance) * 10000.0f;
+            }
+        }
+
+        r32 Value  = Length(Velocity);
+        v2 Direction = Velocity / Value;
+        Velocity = Direction * Min_r32(Value, 100.0f);
+
+        Me->Velocity2 = Velocity / (World.ObjectCount - 1);
+    }
+}
+
 void 
 BactorialUpdateWorld(float dt) 
 {
@@ -72,33 +142,56 @@ BactorialUpdateWorld(float dt)
 
     r32 MaxDistance = 0.0f;
 
-    World.AttractorActive = true;
+    // World.AttractorActive = true;
 
     for (u32 i=0; i<World.ObjectCount; ++i) {
-        if (World.AttractorActive) {
-            World.AttractorP = {(r32)sin(World.Time * 4.0f) * 250.0f + 200.0f, (r32)cos(World.Time * 2.0f) * 250.0f + 200.0f};
+        object *Object = World.Objects + i;
+        if (Object->Mode == Mode_Mitosis) {
+            Object->MitosisProgress += dt / MITOSIS_TIME;
 
-            r32 Distance = Length(World.AttractorP - World.Objects[i].P);
-            v2 Direction = (World.AttractorP - World.Objects[i].P) / Distance;
-
-            if (Distance > 40.0f) {
-                World.Objects[i].Velocity += Direction * 15000.0f / Distance;
-            } else {
-                World.Objects[i].Velocity -= Direction * 100;
+            if (Object->MitosisProgress >= 1.0f) {
+                DivideCell(Object);
             }
+        }
+
+        // if (World.AttractorActive) {
+        //     World.AttractorP = {(r32)sin(World.Time * 4.0f) * 250.0f + 200.0f, (r32)cos(World.Time * 2.0f) * 250.0f + 200.0f};
+
+        //     r32 Distance = Length(World.AttractorP - World.Objects[i].P);
+        //     v2 Direction = (World.AttractorP - World.Objects[i].P) / Distance;
+
+        //     if (Distance > 40.0f) {
+        //         World.Objects[i].Velocity += Direction * 15000.0f / Distance;
+        //     } else {
+        //         World.Objects[i].Velocity -= Direction * 100;
+        //     }
             
-        } else {
-            World.Objects[i].Velocity.x = (World.Objects[i].Velocity.x - 1, 0);
-            World.Objects[i].Velocity.y = (World.Objects[i].Velocity.y - 1, 0);
-        }
+        // } else {
+        //     
+        // }
 
-        r32 Len = Length(World.AttractorP - World.Objects[i].P);
-        if (Len > MaxDistance) {
-            MaxDistance = Len;
-        }
+        // r32 Len = Length(World.AttractorP - World.Objects[i].P);
+        // if (Len > MaxDistance) {
+        //     MaxDistance = Len;
+        // }
 
-        World.Objects[i].P = World.Objects[i].P + World.Objects[i].Velocity * dt;
+        
 
+        // v2 OscillationV = 
+
+        // v2 Velocity = World.Objects[i].Velocity;
+        // r32 DeltaX = Max_r32(Abs_r32(Velocity.x) * 0.1, 0.0f);
+        // r32 DeltaY = Max_r32(Abs_r32(Velocity.x) * 0.1, 0.0f);
+        // Velocity.x += Sign(Velocity.x) * -1.0f * 5.0f;
+
+        BactorialStabilizeColony();
+
+        v2 Slowdown = World.Objects[i].Velocity * -1.0f * 0.02f;
+        World.Objects[i].Velocity += Slowdown;
+
+        v2 SummedVelocity = (World.Objects[i].Velocity + World.Objects[i].Velocity2);
+
+        World.Objects[i].P = World.Objects[i].P + SummedVelocity * dt;
         World.Positions[i] = World.Objects[i].P;
         World.Velocities[i] = World.Objects[i].Velocity;
     }
@@ -108,7 +201,7 @@ BactorialUpdateWorld(float dt)
     // }
 
     World.Tree.NodeCount = 0;
-    BuildQuadTree(&World.Tree, World.Tree.Root, Screen, World.Objects, World.ObjectCount, MAX_NODE_COUNT);
+    // BuildQuadTree(&World.Tree, World.Tree.Root, Screen, World.Objects, World.ObjectCount, MAX_NODE_COUNT);
 
     World.Time += dt;
 }
@@ -116,18 +209,20 @@ BactorialUpdateWorld(float dt)
 void *
 BactorialInitWorld() 
 {
-    pcg32_random_t rng1, rng2, rng3;
-    pcg32_srandom_r(&rng1, 3908476239044, (int)&rng1);
+    pcg32_srandom_r(&Rng, 3908476239044, (int)&Rng);
 
-    World.ObjectCount = 100;
-    World.Objects = (object *)malloc(sizeof(object) * World.ObjectCount);
-    World.Positions = (v2 *)malloc(sizeof(v2) * World.ObjectCount);
-    World.Velocities = (v2 *)malloc(sizeof(v2) * World.ObjectCount);
+    World.ObjectCount = 10;
+    World.Objects = (object *)malloc(sizeof(object) * MAX_OBJECTS);
+    World.Positions = (v2 *)malloc(sizeof(v2) * MAX_OBJECTS);
+    World.Velocities = (v2 *)malloc(sizeof(v2) * MAX_OBJECTS);
+
+    World.Objects[0].Radius = START_R;
+    World.Objects[0].Soul = RandomN();
 
     for (u32 i=0; i<World.ObjectCount; ++i) {
-        r32 X = (r32)(pcg32_random_r(&rng1) % 1000) / 1000.0f;
-        r32 Y = (r32)(pcg32_random_r(&rng1) % 1000) / 1000.0f;
-        World.Objects[i].P = {X * 500.0f,Y* 500.0f};
+        World.Objects[i].P.x = RandomN() * 25.0f;
+        World.Objects[i].P.y = RandomN() * 25.0f;
+        World.Objects[i].Radius = START_R;
     }
 
     World.Tree.Root = (quad_tree_node *)malloc(MAX_NODE_COUNT * sizeof(quad_tree_node));
@@ -160,15 +255,66 @@ LocateObjectWithP(quad_tree_node *Node, rect Rect, v2 P, u32 *Result)
     return Found;
 }   
 
-void 
-BactorialSelectAtP(v2 P) 
+rect 
+GrowRect(rect Rect, u32 Value)
 {
-    quad_tree_node *Root = World.Tree.Root;
+    Rect.Min = Rect.Min - V2(Value, Value);
+    Rect.Max = Rect.Max + V2(Value, Value);
 
-    rect Screen = {{0.0f, 0.0f}, {500.0f, 500.0f}};
-    u32 Index;
-    if (LocateObjectWithP(Root, Screen, P, &Index)) {
-        object *Object = World.Objects + Index;
-        // Object->Selected = true;
+    return Rect;
+}
+
+void 
+BactorialSelectAtP(v2 P)
+{
+    u32 Index = 0;
+    r32 MinDistanceSq = 999999999.0f;
+    for (u32 i=0; i<World.ObjectCount; ++i) {
+        World.Objects[i].Selected = false;
+
+        r32 Lsq = LengthSq(P - World.Objects[i].P);
+
+        if (Lsq < MinDistanceSq) {
+            Index = i;
+            MinDistanceSq = Lsq;
+        }
+    }
+
+    World.Objects[Index].Selected = true;
+    World.SelectedIndex = Index;
+    World.SelectedCount = 1;
+}
+
+void 
+BactorialSelectInRect(rect Rect)
+{
+    for (u32 i=0; i<World.ObjectCount; ++i) {
+        object *Object = World.Objects + i;
+        Object->Selected = false;
+        rect SelectionRect = GrowRect(Rect, Object->Radius);
+
+        if (InRect(SelectionRect, Object->P)) {
+            Object->Selected = true;
+            ++World.SelectedCount;
+        }
     }
 }
+
+void 
+BactorialCommenceMitosis()
+{
+    if (World.SelectedCount == 1) {
+        if (World.Objects[World.SelectedIndex].Mode != Mode_Mitosis) {
+            World.Objects[World.SelectedIndex].Mode = Mode_Mitosis;
+            World.Objects[World.SelectedIndex].MitosisProgress = 0.0f;
+        }
+    } if (World.SelectedCount > 1) {
+        for (u32 i=0; i<World.ObjectCount; ++i) {
+            if (World.Objects[i].Selected) {
+                World.Objects[i].Mode = Mode_Mitosis;
+                World.Objects[i].MitosisProgress = 0.0f;
+            }
+        }
+    }
+}
+
