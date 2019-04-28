@@ -9,6 +9,8 @@
 extern "C" {
     void * EMSCRIPTEN_KEEPALIVE BactorialInitWorld();
     void EMSCRIPTEN_KEEPALIVE BactorialUpdateWorld(float dt);
+    void EMSCRIPTEN_KEEPALIVE BactorialSelect(float minx, float miny, float maxx, float maxy);
+    void EMSCRIPTEN_KEEPALIVE BactorialDivide();
 }
 
 #pragma pack(push,8)  

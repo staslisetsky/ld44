@@ -110,6 +110,17 @@ Render()
             RenderTarget->FillEllipse(ObjectEllipse, BlackBrush);
         }
     }
+    
+    for (u32 i=0; i<World.EnemyCount; ++i) {
+        enemy Enemy = World.Enemies[i];
+        u32 Dim = 10;
+        u32 HalfScreen = 250;
+
+        D2D1_POINT_2F EnemyCenter = {Enemy.P.x + HalfScreen, Enemy.P.y + HalfScreen};
+        D2D1_ELLIPSE EnemyEllipse = {EnemyCenter, (r32)Enemy.Radius, (r32)Enemy.Radius};
+
+        RenderTarget->FillEllipse(EnemyEllipse, RedBrush);
+    }
 
     if (World.SelectionMode) {
         rect RenderRect = World.SelectionRect;
@@ -423,23 +434,15 @@ WinMain(HINSTANCE Instance, HINSTANCE PreviousInstance, LPSTR Args, int WindowSh
 
         if (Input.Mouse[0].WentDown) {
             v2 P = {(r32)Input.MouseP.x, (r32)Input.MouseP.y};
-            World.AttractorP = Input.MouseP;
-            World.AttractorActive = true;
-            BactorialSelectAtP(P);
-        }
-
-        if (Input.Mouse[0].WentDown) {
             World.SelectionStart = Input.MouseP;
-            v2 P = {(r32)Input.MouseP.x, (r32)Input.MouseP.y};
-            World.AttractorP = Input.MouseP;
-            World.AttractorActive = true;
-            BactorialSelectAtP(P);
+            World.SelectionRect = {{Input.MouseP.x, Input.MouseP.y}, {Input.MouseP.x, Input.MouseP.y}};
         }
 
         if (Input.Mouse[0].Down) {
             if (Length(Input.MouseP - World.SelectionRect.Min) > 20.0f) {
                 World.SelectionMode = true;
             }
+
             if (World.SelectionMode) {
                 v2 Min = World.SelectionStart;
                 v2 Max = Input.MouseP;
@@ -455,9 +458,10 @@ WinMain(HINSTANCE Instance, HINSTANCE PreviousInstance, LPSTR Args, int WindowSh
 
         if (Input.Mouse[0].WentUp) {
             if (World.SelectionMode) {
-                BactorialSelectInRect(World.SelectionRect);    
                 World.SelectionMode = false;    
             }
+            BactorialSelect(World.SelectionRect.Min.x, World.SelectionRect.Min.y,
+                            World.SelectionRect.Max.x, World.SelectionRect.Max.y);
         }
 
         if (Input.Keys[Key_F1].WentDown) {

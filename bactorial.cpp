@@ -2,6 +2,7 @@
 #include "include/pcg_basic.c"
 
 #define MAX_OBJECTS 100000
+#define MAX_ENEMIES 1000
 #define MITOSIS_TIME 1.0f
 #define START_R 50
 
@@ -11,6 +12,27 @@ r32
 RandomN()
 {
     return (r32)(pcg32_random_r(&Rng) % 100) / 100.0f;
+}
+
+u32
+Random32()
+{
+    return pcg32_random_r(&Rng);
+}
+
+void
+SpawnEnemy()
+{
+    enemy New = {};
+
+    r32 Theta = RandomN() * PI * 2.0f;
+    v2 Direction = {(r32)sin(Theta), (r32)cos(Theta)};
+
+    New.Radius = Random32() % 40 + 10;
+    New.P = Direction * 200.0f;
+    New.Id = GlobalEnemyId++;
+
+    World.Enemies[World.EnemyCount++] = New;
 }
 
 void
@@ -110,6 +132,10 @@ BactorialStabilizeColony()
     for (u32 i=0; i<World.ObjectCount; ++i) {
         object *Me = World.Objects + i;
 
+        if (Me->Mode == Mode_Attack) {
+            continue;
+        }
+
         v2 Velocity = {};
         for (u32 j=0; j<World.ObjectCount; ++j) {
             if (j == i) {
@@ -135,6 +161,36 @@ BactorialStabilizeColony()
     }
 }
 
+void
+DestroyEnemy(u32 Index)
+{
+    if (Index < World.EnemyCount - 1) {
+        World.Enemies[Index] = World.Enemies[World.EnemyCount - 1];
+    }
+    --World.EnemyCount;
+}
+
+void
+DestroyObject(u32 Index)
+{
+    if (Index < World.ObjectCount - 1) {
+        World.Objects[Index] = World.Objects[World.ObjectCount - 1];
+    }
+    --World.ObjectCount;
+}
+
+enemy *
+FindEnemy(u32 Id)
+{
+    for (u32 i=0; i<World.EnemyCount; ++i) {
+        if (World.Enemies[i].Id == Id) {
+            return World.Enemies + i;
+        }
+    }
+
+    return 0;
+}
+
 void 
 BactorialUpdateWorld(float dt) 
 {
@@ -144,14 +200,48 @@ BactorialUpdateWorld(float dt)
 
     // World.AttractorActive = true;
 
-    for (u32 i=0; i<World.ObjectCount; ++i) {
+    World.BoundingRect = {{9999999.0f, 9999999.0f},{-9999999.0f, -9999999.0f}};
+
+    BactorialStabilizeColony();
+
+    for (s32 i=0; i<World.ObjectCount; ++i) {
         object *Object = World.Objects + i;
+
+        b32 Destroyed = false;
+        for (u32 j=0; j<World.EnemyCount; ++j) {
+            enemy *Enemy = World.Enemies + j;
+
+            r32 Distance  = Max_r32(Length(Object->P - Enemy->P) - (Enemy->Radius + Object->Radius), 0.0f);
+            if (Distance < 1.0f) {
+                DestroyEnemy(j);
+                DestroyObject(i);
+                Destroyed = true;
+                break;
+            }
+        }
+
+        if (Destroyed) {
+            --i;
+            break;
+        }
+
         if (Object->Mode == Mode_Mitosis) {
             Object->MitosisProgress += dt / MITOSIS_TIME;
 
             if (Object->MitosisProgress >= 1.0f) {
                 DivideCell(Object);
             }
+        } else if (Object->Mode == Mode_Attack) {
+            enemy *Enemy = FindEnemy(Object->EnemyId);
+            if (Enemy) {
+                v2 ToEnemy = Enemy->P - Object->P;
+                v2 Direction = ToEnemy / Length(ToEnemy);
+                Object->Velocity = Direction * 100.0f;
+            } else {
+                Object->Mode = Mode_Idle;
+            }
+        } else if (Object->Mode == Mode_Idle) {
+
         }
 
         // if (World.AttractorActive) {
@@ -175,16 +265,12 @@ BactorialUpdateWorld(float dt)
         //     MaxDistance = Len;
         // }
 
-        
-
         // v2 OscillationV = 
 
         // v2 Velocity = World.Objects[i].Velocity;
         // r32 DeltaX = Max_r32(Abs_r32(Velocity.x) * 0.1, 0.0f);
         // r32 DeltaY = Max_r32(Abs_r32(Velocity.x) * 0.1, 0.0f);
         // Velocity.x += Sign(Velocity.x) * -1.0f * 5.0f;
-
-        BactorialStabilizeColony();
 
         v2 Slowdown = World.Objects[i].Velocity * -1.0f * 0.02f;
         World.Objects[i].Velocity += Slowdown;
@@ -193,14 +279,52 @@ BactorialUpdateWorld(float dt)
 
         World.Objects[i].P = World.Objects[i].P + SummedVelocity * dt;
         World.Positions[i] = World.Objects[i].P;
-        World.Velocities[i] = World.Objects[i].Velocity;
+        World.Velocities[i] = SummedVelocity;
+        World.Radii[i] = World.Objects[i].Radius;
+
+        World.BoundingRect.Min.x = Min_r32(World.BoundingRect.Min.x, World.Objects[i].P.x - World.Objects[i].Radius);
+        World.BoundingRect.Min.y = Min_r32(World.BoundingRect.Min.y, World.Objects[i].P.y - World.Objects[i].Radius);
+        World.BoundingRect.Max.x = Max_r32(World.BoundingRect.Max.x, World.Objects[i].P.x + World.Objects[i].Radius);
+        World.BoundingRect.Max.y = Max_r32(World.BoundingRect.Max.y, World.Objects[i].P.y + World.Objects[i].Radius);
     }
 
-    // if (MaxDistance < 10.0f) {
-    //     World.AttractorActive = false;
-    // }
+    v2 RectCenter = World.BoundingRect.Min + (World.BoundingRect.Max - World.BoundingRect.Min) / 2.0f;
+    r32 ApproachRadius = Length(World.BoundingRect.Max - World.BoundingRect.Min) / 2.0f + 50.0f;
 
-    World.Tree.NodeCount = 0;
+    for (u32 i=0; i<World.EnemyCount; ++i) {
+        enemy *Enemy = World.Enemies + i;
+
+        Enemy->TargetIndex = 0;
+
+        r32 Distance = Length(Enemy->P - RectCenter);
+        v2 Direction = (RectCenter - Enemy->P) / Distance;
+
+        if (Enemy->Mode == EnemyMode_Approach) {
+            if (Distance > ApproachRadius) {
+                Enemy->Velocity = Direction * Distance / 10.0;
+            } else {
+                Enemy->Mode = EnemyMode_Orbit;
+                Enemy->AttackTimer = RandomN() * 20.0f + 0.5f;
+            }
+        } else if (Enemy->Mode == EnemyMode_Orbit) {
+            Enemy->Velocity = Perp((Enemy->P - RectCenter) / Distance) * 100.0f;
+            Enemy->Velocity += Direction * (Distance - ApproachRadius);
+            Enemy->AttackTimer = Max_r32(Enemy->AttackTimer - dt, 0.0f);
+
+            if (Enemy->AttackTimer == 0.0f) {
+                Enemy->Mode = EnemyMode_Attack;
+            }
+        } else if (Enemy->Mode == EnemyMode_Attack) {
+            object *Object = World.Objects + Enemy->TargetIndex;
+            v2 ToTarget = Object->P - Enemy->P;
+            v2 Direction = ToTarget / Length(ToTarget);
+            Enemy->Velocity = Direction * 1000.0 / Enemy->Radius;
+        }
+
+        Enemy->P = Enemy->P  + Enemy->Velocity * dt;
+    }
+
+    // World.Tree.NodeCount = 0;
     // BuildQuadTree(&World.Tree, World.Tree.Root, Screen, World.Objects, World.ObjectCount, MAX_NODE_COUNT);
 
     World.Time += dt;
@@ -212,20 +336,28 @@ BactorialInitWorld()
     pcg32_srandom_r(&Rng, 3908476239044, (int)&Rng);
 
     World.ObjectCount = 10;
+
     World.Objects = (object *)malloc(sizeof(object) * MAX_OBJECTS);
     World.Positions = (v2 *)malloc(sizeof(v2) * MAX_OBJECTS);
     World.Velocities = (v2 *)malloc(sizeof(v2) * MAX_OBJECTS);
+    World.Radii = (r32 *)malloc(sizeof(r32) * MAX_OBJECTS);
 
+    World.Enemies = (enemy *)malloc(sizeof(enemy) * MAX_ENEMIES);
+
+#if 0
     World.Objects[0].Radius = START_R;
-    World.Objects[0].Soul = RandomN();
 
+#else
     for (u32 i=0; i<World.ObjectCount; ++i) {
         World.Objects[i].P.x = RandomN() * 25.0f;
         World.Objects[i].P.y = RandomN() * 25.0f;
         World.Objects[i].Radius = START_R;
     }
+#endif
 
     World.Tree.Root = (quad_tree_node *)malloc(MAX_NODE_COUNT * sizeof(quad_tree_node));
+
+    SpawnEnemy();
 
     return &World;
 }
@@ -264,40 +396,48 @@ GrowRect(rect Rect, u32 Value)
     return Rect;
 }
 
-void 
+b32
 BactorialSelectAtP(v2 P)
 {
+    b32 Found = false;
     u32 Index = 0;
-    r32 MinDistanceSq = 999999999.0f;
+    r32 MinDistance = 999999999.0f;
     for (u32 i=0; i<World.ObjectCount; ++i) {
         World.Objects[i].Selected = false;
-
-        r32 Lsq = LengthSq(P - World.Objects[i].P);
-
-        if (Lsq < MinDistanceSq) {
+        r32 Len = Length(P - World.Objects[i].P);
+        if (Len < MinDistance) {
             Index = i;
-            MinDistanceSq = Lsq;
+            MinDistance = Len;
         }
+    }
+
+    r32 DistanceFromSurface = Max_r32(Length(P - World.Objects[Index].P) - World.Objects[Index].Radius, 0.0f);
+
+    if (DistanceFromSurface < 1) {
+        Found = true;    
     }
 
     World.Objects[Index].Selected = true;
     World.SelectedIndex = Index;
     World.SelectedCount = 1;
+
+    return Found;
 }
 
-void 
-BactorialSelectInRect(rect Rect)
+enemy *
+BactorialFindEnemy(v2 P)
 {
-    for (u32 i=0; i<World.ObjectCount; ++i) {
-        object *Object = World.Objects + i;
-        Object->Selected = false;
-        rect SelectionRect = GrowRect(Rect, Object->Radius);
+    enemy *Result = 0;
 
-        if (InRect(SelectionRect, Object->P)) {
-            Object->Selected = true;
-            ++World.SelectedCount;
+    r32 MinDistanceSq = 999999999.0f;
+    for (u32 i=0; i<World.EnemyCount; ++i) {
+        r32 Lsq = LengthSq(P - World.Enemies[i].P);
+        if (Lsq < MinDistanceSq) {
+            Result = World.Enemies + i;
         }
     }
+
+    return Result;
 }
 
 void 
@@ -317,4 +457,73 @@ BactorialCommenceMitosis()
         }
     }
 }
+
+void 
+BactorialAttack(enemy *Enemy)
+{
+    if (World.SelectedCount == 1) {
+        World.Objects[World.SelectedIndex].Mode = Mode_Attack;
+        World.Objects[World.SelectedIndex].EnemyId = Enemy->Id;
+    } if (World.SelectedCount > 1) {
+        for (u32 i=0; i<World.ObjectCount; ++i) {
+            if (World.Objects[i].Selected) {
+                World.Objects[i].Mode = Mode_Attack;
+                World.Objects[i].EnemyId = Enemy->Id;
+            }
+        }
+    }
+}
+
+void
+BactorialDivide() {
+    // EM_ASM({
+    //   console.log('DIVIDE!!!');
+    // });
+    BactorialCommenceMitosis();
+}
+
+void
+BactorialAttackEnemy(float x, float y) {
+    // EM_ASM({
+    //   console.log('Attack!!!');
+    // });
+    enemy *Enemy = BactorialFindEnemy(V2(x,y));
+    BactorialAttack(Enemy);
+}
+
+
+void 
+BactorialSelect(float minx, float miny, float maxx, float maxy)
+{
+    // EM_ASM({
+    //   console.log('Selecting rect: : ' + [$0, $1, $2, $3]);
+    // }, minx, miny, maxx, maxy);
+
+    rect Rect = {{minx, miny}, {maxx, maxy}};
+
+    if (Length(Rect.Max - Rect.Min) < 5.0f) {
+        v2 ClickP = Rect.Min + (Rect.Max - Rect.Min);
+        if (BactorialSelectAtP(ClickP)) {
+            u32 a =4;
+        } else if (World.SelectedCount) {
+            BactorialAttackEnemy(ClickP.x, ClickP.y);
+        }
+    } else {
+        for (u32 i=0; i<World.ObjectCount; ++i) {
+            object *Object = World.Objects + i;
+            Object->Selected = false;
+            rect SelectionRect = GrowRect(Rect, Object->Radius);
+
+            if (InRect(SelectionRect, Object->P)) {
+                Object->Selected = true;
+                ++World.SelectedCount;
+            }
+        }    
+    }
+
+    // EM_ASM({
+    //   console.log('Selected: ' + [$0]);
+    // }, World.SelectedCount);
+}
+
 

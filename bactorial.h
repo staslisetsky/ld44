@@ -51,7 +51,31 @@ enum mode_ {
     Mode_Count,
 };
 
+
+enum enemy_mode_ {
+    EnemyMode_Approach,
+    EnemyMode_Orbit,
+    EnemyMode_Attack,
+};
+
+struct enemy {
+    u32 Id;
+    enemy_mode_ Mode;
+
+    r32 AttackTimer;
+    u32 TargetIndex;
+
+    v2 P;
+    v2 Velocity;
+    u32 Radius;
+    r32 Soul;
+};
+
+static u32 GlobalEnemyId = 0;
+
 struct object {
+    u32 EnemyId;
+
     v2 P;
     v2 Velocity;
     v2 Velocity2;
@@ -65,10 +89,16 @@ struct object {
     r32 Soul;
 };
 
+
 struct world {
     u32 ObjectCount;
     v2 *Positions;
     v2 *Velocities;
+    r32 *Radii;
+
+    u32 Fattest[10];
+
+    rect BoundingRect;
 
 // internal data:
     u32 SelectedIndex;
@@ -79,6 +109,9 @@ struct world {
     b32 SelectionMode;
 
     object *Objects;
+    enemy *Enemies;
+    u32 EnemyCount;
+
     v2 AttractorP;
     b32 AttractorActive;
     quad_tree Tree;
@@ -87,4 +120,3 @@ struct world {
 
 static world World = {};
 
-object Objects[] = {{10,10}, {50,200}};
