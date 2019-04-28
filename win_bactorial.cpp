@@ -88,8 +88,14 @@ Render()
 {
     ID2D1SolidColorBrush *BlackBrush;
     ID2D1SolidColorBrush *RedBrush;
+    ID2D1SolidColorBrush *EnemyBrush;
+
     RenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Black), &BlackBrush);
     RenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Red), &RedBrush);
+
+    rgba EnemyColor = Normalize(RGBA(3, 193, 202, 255));
+    D2D1_COLOR_F Color = {EnemyColor.r, EnemyColor.g, EnemyColor.b, EnemyColor.a};
+    RenderTarget->CreateSolidColorBrush(Color, &EnemyBrush);
     
     RenderTarget->BeginDraw();
     RenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::White));
@@ -119,7 +125,7 @@ Render()
         D2D1_POINT_2F EnemyCenter = {Enemy.P.x + HalfScreen, Enemy.P.y + HalfScreen};
         D2D1_ELLIPSE EnemyEllipse = {EnemyCenter, (r32)Enemy.Radius, (r32)Enemy.Radius};
 
-        RenderTarget->FillEllipse(EnemyEllipse, RedBrush);
+        RenderTarget->FillEllipse(EnemyEllipse, EnemyBrush);
     }
 
     if (World.SelectionMode) {

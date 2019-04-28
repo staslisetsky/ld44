@@ -43,31 +43,33 @@ struct quad_tree {
     u32 NodeCount;
 };
 
-enum mode_ {
-    Mode_Idle,
-    Mode_Mitosis,
-    Mode_Attack,
+enum status_ {
+    Status_Idle,
+    Status_Mitosis,
+    Status_Attack,
+    Status_Dead,
 
-    Mode_Count,
+    Status_Count,
 };
 
-
-enum enemy_mode_ {
-    EnemyMode_Approach,
-    EnemyMode_Orbit,
-    EnemyMode_Attack,
+enum enemy_phase_ {
+    EnemyPhase_Approach,
+    EnemyPhase_Orbit,
+    EnemyPhase_Attack,
+    EnemyPhase_Dead,
 };
 
 struct enemy {
     u32 Id;
-    enemy_mode_ Mode;
+    status_ Status;
+    enemy_phase_ Phase;
 
     r32 AttackTimer;
     u32 TargetIndex;
 
     v2 P;
     v2 Velocity;
-    u32 Radius;
+    r32 Radius;
     r32 Soul;
 };
 
@@ -79,28 +81,30 @@ struct object {
     v2 P;
     v2 Velocity;
     v2 Velocity2;
-    u32 Radius;
+    r32 Radius;
     b32 Selected;
 
-    mode_ Mode;
+    status_ Status;
     r32 MitosisProgress;
 
     char *Name;
     r32 Soul;
 };
 
-
 struct world {
-    u32 ObjectCount;
+    u32 DataCount;
     v2 *Positions;
     v2 *Velocities;
     r32 *Radii;
+    u8 *States;
+    
+// internal data:
+    r32 DeadRadius;
+    r32 NextSpawn;
 
     u32 Fattest[10];
-
     rect BoundingRect;
 
-// internal data:
     u32 SelectedIndex;
     u32 SelectedCount;
 
@@ -109,6 +113,7 @@ struct world {
     b32 SelectionMode;
 
     object *Objects;
+    u32 ObjectCount;
     enemy *Enemies;
     u32 EnemyCount;
 
