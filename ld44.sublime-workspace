@@ -11,7 +11,7 @@
 			"file": "build_wasm.bat",
 			"settings":
 			{
-				"buffer_size": 302,
+				"buffer_size": 439,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -38,7 +38,7 @@
 			"file": "wasm_bactorial.cpp",
 			"settings":
 			{
-				"buffer_size": 420,
+				"buffer_size": 772,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -54,7 +54,7 @@
 			"file": "build/main.html",
 			"settings":
 			{
-				"buffer_size": 1279,
+				"buffer_size": 1739,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -63,7 +63,7 @@
 			"file": "build/bactorial_wasm_loader.js",
 			"settings":
 			{
-				"buffer_size": 1255,
+				"buffer_size": 1892,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -72,7 +72,7 @@
 			"file": "win_bactorial.cpp",
 			"settings":
 			{
-				"buffer_size": 15186,
+				"buffer_size": 16897,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -81,7 +81,7 @@
 			"file": "bactorial.cpp",
 			"settings":
 			{
-				"buffer_size": 6115,
+				"buffer_size": 17653,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -119,7 +119,7 @@
 			"file": "bactorial.h",
 			"settings":
 			{
-				"buffer_size": 1242,
+				"buffer_size": 2010,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -128,24 +128,15 @@
 			"file": "build/main.js",
 			"settings":
 			{
-				"buffer_size": 20176,
+				"buffer_size": 53670,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "main.cpp",
+			"file": "bactorial_wasm_loader.js",
 			"settings":
 			{
-				"buffer_size": 515,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "build/main_custom.html",
-			"settings":
-			{
-				"buffer_size": 323,
+				"buffer_size": 1818,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -203,13 +194,10 @@
 			}
 		},
 		{
-			"contents": "var globals = {\n  statePointer: 0,\n  objects: []\n};\n\nvar Module = {\n  onRuntimeInitialized: init,\n};\n\nfunction init() {\n  globals.statePointer = Module._BactorialInitWorld();\n  loadState();\n  console.log('World initialized');\n};\n\nfunction loadState() {\n  var objectCount = Module.getValue(globals.statePointer, \"i32\");\n  console.log('Object count: ' + objectCount);\n\n  var objectsData = globals.statePointer + 4;\n\n  for (i=0; i<objectCount; ++i) {\n    var positions = Module.getValue(objectsData, \"*\");\n    objectsData += 8;\n\n    var velocities = Module.getValue(objectsData, \"*\");\n    objectsData += 8;\n\n    for (var i=0; i<objectCount; ++i) {\n        var x = Module.getValue(objectsData, \"float\");\n        positions += 4;\n        var y = Module.getValue(objectsData, \"float\");\n        positions += 4;\n\n        console.log(' position: {' + x + ', ' + y + '}');\n    }\n\n    for (var i=0; i<objectCount; ++i) {\n        var x = Module.getValue(objectsData, \"float\");\n        velocities += 4;\n        var y = Module.getValue(objectsData, \"float\");\n        velocities += 4;\n\n        console.log(' velocity: {' + x + ', ' + y + '}');\n    }\n  }\n}",
-			"file": "bactorial_wasm_loader.js",
-			"file_size": 1185,
-			"file_write_time": 132008587974036043,
+			"file": "main.cpp",
 			"settings":
 			{
-				"buffer_size": 1139,
+				"buffer_size": 515,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -353,12 +341,15 @@
 	],
 	"file_history":
 	[
-		"/P/Ls/ld44/.gitignore",
+		"/P/Ls/ld44/bactorial_wasm_loader.js",
+		"/P/Ls/ld44/js/three.js",
+		"/P/Ls/ld44/build/bactorial_wasm_loader.js",
+		"/P/Ls/ld44/build/main_custom.html",
 		"/P/Ls/ld44/main.cpp",
+		"/P/Ls/ld44/.gitignore",
 		"/P/Ls/neuro/win32_ls_neuro.cpp",
 		"/P/Ls/neuro/ls_neuro.cpp",
 		"/P/Ls/ld44/ls_math.h",
-		"/P/Ls/ld44/js/three.js",
 		"/P/Ls/ld44/bactorial.cpp",
 		"/P/Ls/ld44/include/pcg_extras.hpp",
 		"/P/Ls/ld44/include/pcg_uint128.hpp",
@@ -477,18 +468,15 @@
 		"/P/third party/4coder/4coder_ui_helper.cpp",
 		"/P/Ls/cascade/ide/xcode_9.2/xcode_9.2.xcodeproj/project.xcworkspace/xcuserdata/stas.xcuserdatad/UserInterfaceState.xcuserstate",
 		"/P/Ls/znalka/ls/ls_meta.cpp",
-		"/P/Ls/znalka/template_generator.pro.user",
-		"/P/Ls/znalka/data/index - Copy.html",
-		"/P/printware/orders.log",
-		"/P/Ls/znalka/data/motherfuckingwebsite.com.html"
+		"/P/Ls/znalka/template_generator.pro.user"
 	],
 	"find":
 	{
-		"height": 56.0
+		"height": 68.0
 	},
 	"find_in_files":
 	{
-		"height": 205.0,
+		"height": 226.0,
 		"where_history":
 		[
 			""
@@ -499,6 +487,70 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			");\n",
+			"BactorialInitWorld",
+			"console.",
+			"velocities",
+			"console.log",
+			"spawnen",
+			"BoundingRect",
+			"was",
+			"spawn",
+			"BactorialDeselect",
+			"Direction",
+			"World.Objects[i]",
+			"u8",
+			"SpawnEnemy",
+			"BactorialAttack",
+			"destroyobje",
+			"[",
+			"Object",
+			"statevar",
+			"World.Objects[i]",
+			"Destroyed",
+			"Mode",
+			"Status",
+			"Enemy->Mode",
+			"EnemyStatus_",
+			"Mode_",
+			"Object->Mode",
+			"mode_",
+			"Mode_",
+			"mode_",
+			"enemy_mode_",
+			"=",
+			";\n",
+			"EnemyIndex",
+			"Object",
+			"Enemies",
+			"Velocities",
+			"doFrame",
+			"time",
+			"velocities",
+			"Radii",
+			");\n",
+			"selectionre",
+			"min",
+			"Object",
+			"object",
+			"Min",
+			".x",
+			"Object",
+			"ObjectRect",
+			"Rectangle",
+			"velocity",
+			"y",
+			"i",
+			"World.SelectionRect.Max",
+			"World.SelectionRect.Min",
+			"World.SelectionRect",
+			"selectionre",
+			"selection",
+			"SelectRect",
+			"Index",
+			"{\n",
+			"keys",
+			"Object.",
 			"build",
 			"Object",
 			"(r32)(pcg32_random_r(&rng1) % 100) / 100.0f",
@@ -562,20 +614,7 @@
 			".w",
 			"RenderTarget",
 			"t",
-			"createfa",
-			"Console",
-			"ctx",
-			"data",
-			"ObjectCount",
-			"statePointer",
-			"Test",
-			"void",
-			"aborts",
-			"abort",
-			"\"",
-			"'",
-			"obj",
-			"progressElement"
+			"createfa"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -594,7 +633,7 @@
 	"groups":
 	[
 		{
-			"selected": 7,
+			"selected": 8,
 			"sheets":
 			[
 				{
@@ -603,15 +642,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 302,
+						"buffer_size": 439,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								87,
-								87
+								439,
+								439
 							]
 						],
 						"settings":
@@ -623,7 +662,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 36,
+					"stack_index": 22,
 					"type": "text"
 				},
 				{
@@ -639,8 +678,8 @@
 						"selection":
 						[
 							[
-								1434,
-								1434
+								648,
+								648
 							]
 						],
 						"settings":
@@ -650,10 +689,10 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 2484.0,
+						"translation.y": 738.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 18,
+					"stack_index": 23,
 					"type": "text"
 				},
 				{
@@ -681,7 +720,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 41,
+					"stack_index": 40,
 					"type": "text"
 				},
 				{
@@ -690,15 +729,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 420,
+						"buffer_size": 772,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								403,
-								403
+								755,
+								755
 							]
 						],
 						"settings":
@@ -711,7 +750,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 10,
+					"stack_index": 27,
 					"type": "text"
 				},
 				{
@@ -738,7 +777,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 35,
+					"stack_index": 38,
 					"type": "text"
 				},
 				{
@@ -747,7 +786,7 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1279,
+						"buffer_size": 1739,
 						"regions":
 						{
 						},
@@ -769,7 +808,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
+					"stack_index": 26,
 					"type": "text"
 				},
 				{
@@ -778,15 +817,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1255,
+						"buffer_size": 1892,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								161,
-								161
+								661,
+								661
 							]
 						],
 						"settings":
@@ -796,10 +835,10 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 207.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 8,
+					"stack_index": 3,
 					"type": "text"
 				},
 				{
@@ -808,46 +847,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 15186,
+						"buffer_size": 16897,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2367,
-								2367
-							]
-						],
-						"settings":
-						{
-							"history_list_is_closing": true,
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 2369.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 8,
-					"file": "bactorial.cpp",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 6115,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1899,
-								1904
+								14984,
+								14984
 							]
 						],
 						"settings":
@@ -859,10 +867,42 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1532.0,
+						"translation.y": 9392.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "bactorial.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 17653,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4675,
+								4676
+							]
+						],
+						"settings":
+						{
+							"history_list_is_closing": true,
+							"spell_check": false,
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 3199.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
 					"type": "text"
 				},
 				{
@@ -889,10 +929,10 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 2712.0,
+						"translation.y": 2669.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 29,
+					"stack_index": 35,
 					"type": "text"
 				},
 				{
@@ -918,10 +958,10 @@
 							"syntax": "Packages/C++/C++.sublime-syntax"
 						},
 						"translation.x": 0.0,
-						"translation.y": 657.0,
+						"translation.y": 438.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 32,
+					"stack_index": 21,
 					"type": "text"
 				},
 				{
@@ -948,7 +988,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 38,
+					"stack_index": 20,
 					"type": "text"
 				},
 				{
@@ -957,27 +997,29 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1242,
+						"buffer_size": 2010,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								222,
-								222
+								1577,
+								1577
 							]
 						],
 						"settings":
 						{
 							"spell_check": true,
-							"syntax": "Packages/C++/C++.sublime-syntax"
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 1819.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 8,
 					"type": "text"
 				},
 				{
@@ -986,7 +1028,7 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 20176,
+						"buffer_size": 53670,
 						"regions":
 						{
 						},
@@ -1005,67 +1047,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 16,
-					"type": "text"
-				},
-				{
-					"buffer": 14,
-					"file": "main.cpp",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 515,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								187,
-								187
-							]
-						],
-						"settings":
-						{
-							"history_list_is_closing": true,
-							"syntax": "Packages/C++/C++.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 9,
-					"type": "text"
-				},
-				{
-					"buffer": 15,
-					"file": "build/main_custom.html",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 323,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								322,
-								322
-							]
-						],
-						"settings":
-						{
-							"history_list_is_closing": true,
-							"syntax": "Packages/HTML/HTML.sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 40,
+					"stack_index": 19,
 					"type": "text"
 				},
 				{
@@ -1074,15 +1056,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 302,
+						"buffer_size": 439,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								302,
-								302
+								439,
+								439
 							]
 						],
 						"settings":
@@ -1093,7 +1075,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 33,
+					"stack_index": 16,
 					"type": "text"
 				},
 				{
@@ -1102,26 +1084,26 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 420,
+						"buffer_size": 772,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								186,
-								204
+								623,
+								623
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/C++/C++.sublime-syntax"
 						},
-						"translation.x": 0.0,
+						"translation.x": 11.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 34,
+					"stack_index": 11,
 					"type": "text"
 				},
 				{
@@ -1130,38 +1112,7 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1279,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								325,
-								325
-							]
-						],
-						"settings":
-						{
-							"history_list_is_closing": true,
-							"syntax": "Packages/HTML/HTML.sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 57.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 7,
-					"type": "text"
-				},
-				{
-					"buffer": 16,
-					"file": "state.h",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 147,
+						"buffer_size": 1739,
 						"regions":
 						{
 						},
@@ -1174,13 +1125,74 @@
 						],
 						"settings":
 						{
+							"history_list_is_closing": true,
+							"syntax": "Packages/HTML/HTML.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 14,
+					"file": "bactorial_wasm_loader.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1818,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								174,
+								174
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 13,
+					"type": "text"
+				},
+				{
+					"buffer": 15,
+					"file": "state.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 147,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								88,
+								88
+							]
+						],
+						"settings":
+						{
 							"syntax": "Packages/C++/C++.sublime-syntax"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 37,
+					"stack_index": 12,
 					"type": "text"
 				},
 				{
@@ -1189,15 +1201,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1242,
+						"buffer_size": 2010,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								821,
-								821
+								1254,
+								1254
 							]
 						],
 						"settings":
@@ -1209,7 +1221,7 @@
 						"translation.y": 504.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 31,
+					"stack_index": 37,
 					"type": "text"
 				},
 				{
@@ -1218,15 +1230,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 6115,
+						"buffer_size": 17653,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2955,
-								2955
+								14872,
+								14872
 							]
 						],
 						"settings":
@@ -1238,14 +1250,14 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 2308.0,
+						"translation.y": 6928.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 26,
+					"stack_index": 17,
 					"type": "text"
 				},
 				{
-					"buffer": 17,
+					"buffer": 16,
 					"file": "cascade_math.cpp",
 					"semi_transient": false,
 					"settings":
@@ -1271,11 +1283,11 @@
 						"translation.y": 12448.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 25,
+					"stack_index": 32,
 					"type": "text"
 				},
 				{
-					"buffer": 18,
+					"buffer": 17,
 					"file": "cascade_math.h",
 					"semi_transient": false,
 					"settings":
@@ -1301,11 +1313,11 @@
 						"translation.y": 1612.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 24,
+					"stack_index": 31,
 					"type": "text"
 				},
 				{
-					"buffer": 19,
+					"buffer": 18,
 					"file": "/P/Ls/neuro/ls_neuro.h",
 					"semi_transient": false,
 					"settings":
@@ -1331,11 +1343,11 @@
 						"translation.y": 1512.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 27,
+					"stack_index": 33,
 					"type": "text"
 				},
 				{
-					"buffer": 20,
+					"buffer": 19,
 					"file": "include/pcg_extras.hpp",
 					"semi_transient": false,
 					"settings":
@@ -1361,11 +1373,11 @@
 						"translation.y": 12448.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 30,
+					"stack_index": 36,
 					"type": "text"
 				},
 				{
-					"buffer": 21,
+					"buffer": 20,
 					"file": "build.bat",
 					"semi_transient": false,
 					"settings":
@@ -1390,7 +1402,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 28,
+					"stack_index": 34,
 					"type": "text"
 				},
 				{
@@ -1426,7 +1438,7 @@
 			]
 		},
 		{
-			"selected": 3,
+			"selected": 4,
 			"sheets":
 			[
 				{
@@ -1435,15 +1447,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 420,
+						"buffer_size": 772,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								273,
-								273
+								451,
+								451
 							]
 						],
 						"settings":
@@ -1456,11 +1468,41 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 12,
+					"stack_index": 4,
 					"type": "text"
 				},
 				{
 					"buffer": 14,
+					"file": "bactorial_wasm_loader.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1818,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								808,
+								808
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 276.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 9,
+					"type": "text"
+				},
+				{
+					"buffer": 21,
 					"file": "main.cpp",
 					"semi_transient": false,
 					"settings":
@@ -1472,8 +1514,8 @@
 						"selection":
 						[
 							[
-								0,
-								0
+								161,
+								161
 							]
 						],
 						"settings":
@@ -1485,7 +1527,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 14,
+					"stack_index": 15,
 					"type": "text"
 				},
 				{
@@ -1494,15 +1536,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1279,
+						"buffer_size": 1739,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								865,
-								865
+								1230,
+								1230
 							]
 						],
 						"settings":
@@ -1513,10 +1555,10 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 252.0,
+						"translation.y": 483.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 13,
+					"stack_index": 6,
 					"type": "text"
 				},
 				{
@@ -1525,30 +1567,30 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 6115,
+						"buffer_size": 17653,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								135,
-								135
+								1362,
+								1362
 							]
 						],
 						"settings":
 						{
 							"history_list_is_closing": true,
-							"spell_check": true,
+							"spell_check": false,
 							"syntax": "Packages/C++/C++.sublime-syntax",
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 814.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 2,
 					"type": "text"
 				},
 				{
@@ -1557,15 +1599,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1255,
+						"buffer_size": 1892,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								520,
-								520
+								319,
+								319
 							]
 						],
 						"settings":
@@ -1575,42 +1617,14 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 336.0,
+						"translation.y": 304.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 6,
+					"stack_index": 14,
 					"type": "text"
 				},
 				{
 					"buffer": 22,
-					"file": "bactorial_wasm_loader.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1139,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								524,
-								524
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 15,
-					"type": "text"
-				},
-				{
-					"buffer": 23,
 					"semi_transient": false,
 					"settings":
 					{
@@ -1681,7 +1695,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 17,
+					"stack_index": 28,
 					"type": "text"
 				},
 				{
@@ -1690,15 +1704,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1242,
+						"buffer_size": 2010,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								737,
-								737
+								1545,
+								1545
 							]
 						],
 						"settings":
@@ -1707,14 +1721,14 @@
 							"syntax": "Packages/C++/C++.sublime-syntax"
 						},
 						"translation.x": 0.0,
-						"translation.y": 712.0,
+						"translation.y": 1819.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 11,
+					"stack_index": 7,
 					"type": "text"
 				},
 				{
-					"buffer": 18,
+					"buffer": 17,
 					"file": "cascade_math.h",
 					"semi_transient": false,
 					"settings":
@@ -1740,11 +1754,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 23,
+					"stack_index": 30,
 					"type": "text"
 				},
 				{
-					"buffer": 17,
+					"buffer": 16,
 					"file": "cascade_math.cpp",
 					"semi_transient": false,
 					"settings":
@@ -1767,10 +1781,10 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 3240.0,
+						"translation.y": 2895.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 20,
+					"stack_index": 25,
 					"type": "text"
 				},
 				{
@@ -1779,15 +1793,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 15186,
+						"buffer_size": 16897,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2315,
-								2320
+								16437,
+								16437
 							]
 						],
 						"settings":
@@ -1798,14 +1812,14 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 2260.0,
+						"translation.y": 8696.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 4,
+					"stack_index": 24,
 					"type": "text"
 				},
 				{
-					"buffer": 21,
+					"buffer": 20,
 					"file": "build.bat",
 					"semi_transient": false,
 					"settings":
@@ -1817,8 +1831,8 @@
 						"selection":
 						[
 							[
-								162,
-								162
+								488,
+								488
 							]
 						],
 						"settings":
@@ -1830,7 +1844,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 21,
+					"stack_index": 18,
 					"type": "text"
 				},
 				{
@@ -1839,15 +1853,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 302,
+						"buffer_size": 439,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								302,
-								302
+								439,
+								439
 							]
 						],
 						"settings":
@@ -1855,11 +1869,11 @@
 							"history_list_is_closing": true,
 							"syntax": "Packages/Batch File/Batch File.sublime-syntax"
 						},
-						"translation.x": 0.0,
+						"translation.x": 44.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 19,
+					"stack_index": 10,
 					"type": "text"
 				},
 				{
@@ -1889,7 +1903,7 @@
 						"translation.y": 2484.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 22,
+					"stack_index": 29,
 					"type": "text"
 				}
 			]
@@ -1897,7 +1911,7 @@
 	],
 	"incremental_find":
 	{
-		"height": 56.0
+		"height": 32.0
 	},
 	"input":
 	{
@@ -1923,7 +1937,7 @@
 		"cols":
 		[
 			0.0,
-			0.5,
+			0.973958333333,
 			1.0
 		],
 		"rows":
@@ -1945,7 +1959,7 @@
 	"project": "ld44.sublime-project",
 	"replace":
 	{
-		"height": 82.0
+		"height": 60.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -1955,28 +1969,68 @@
 		"selected_items":
 		[
 			[
-				"wi",
-				"win_bactorial.cpp"
-			],
-			[
 				"win",
 				"win_bactorial.cpp"
 			],
 			[
-				"bact",
-				"bactorial.cpp"
+				"wa",
+				"wasm_bactorial.cpp"
 			],
 			[
-				"b",
-				"bactorial.cpp"
+				"load",
+				"build\\bactorial_wasm_loader.js"
+			],
+			[
+				"main",
+				"build\\main.html"
 			],
 			[
 				"",
 				"build\\main.html"
 			],
 			[
-				"main",
-				"build\\main.html"
+				"bui",
+				"build_wasm.bat"
+			],
+			[
+				"bu",
+				"build_wasm.bat"
+			],
+			[
+				"was",
+				"wasm_bactorial.cpp"
+			],
+			[
+				"loa",
+				"build\\bactorial_wasm_loader.js"
+			],
+			[
+				"build wa",
+				"build_wasm.bat"
+			],
+			[
+				"bac",
+				"bactorial.cpp"
+			],
+			[
+				"lo",
+				"P:\\Ls\\ld44\\bactorial_wasm_loader.js"
+			],
+			[
+				"wasm",
+				"build_wasm.bat"
+			],
+			[
+				"bact",
+				"bactorial.cpp"
+			],
+			[
+				"wi",
+				"win_bactorial.cpp"
+			],
+			[
+				"b",
+				"bactorial.cpp"
 			],
 			[
 				"ba",
@@ -1987,20 +2041,8 @@
 				"build\\main.html"
 			],
 			[
-				"lo",
-				"build\\bactorial_wasm_loader.js"
-			],
-			[
-				"load",
-				"build\\bactorial_wasm_loader.js"
-			],
-			[
 				"m",
 				"build\\main.html"
-			],
-			[
-				"was",
-				"wasm_bactorial.cpp"
 			],
 			[
 				"mai.h",
@@ -2023,20 +2065,8 @@
 				"build_wasm.bat"
 			],
 			[
-				"bui",
-				"build.bat"
-			],
-			[
-				"bac",
-				"bactorial.cpp"
-			],
-			[
 				"pcg",
 				"pcg_basic.h"
-			],
-			[
-				"wa",
-				"wasm_bactorial.cpp"
 			],
 			[
 				"main.h",
@@ -2449,22 +2479,6 @@
 			[
 				"uie",
 				"source\\cascade_ui_engine.cpp"
-			],
-			[
-				"casade.",
-				"source\\cascade.cpp"
-			],
-			[
-				"c",
-				"source\\cascade.cpp"
-			],
-			[
-				"tem",
-				"template_maker.cpp"
-			],
-			[
-				"inde.",
-				"data\\index.html"
 			]
 		],
 		"width": 0.0
@@ -2480,29 +2494,237 @@
 	},
 	"select_symbol":
 	{
-		"height": 392.0,
-		"last_filter": "render",
+		"height": 69.0,
+		"last_filter": "stabili",
 		"selected_items":
 		[
 			[
-				"render",
-				"Render"
+				"stabili",
+				"BactorialStabilizeColony"
 			],
 			[
-				"spaw",
-				"SPAWN_TIME"
+				"ivi",
+				"DivideCell"
+			],
+			[
+				"update",
+				"BactorialUpdateWorld"
+			],
+			[
+				"divi",
+				"DivideCell"
+			],
+			[
+				"inti",
+				"BactorialInitWorld"
+			],
+			[
+				"initw",
+				"BactorialInitWorld"
 			],
 			[
 				"world",
 				"world"
 			],
 			[
-				"spawn",
-				"SPAWN_COST"
+				"updar",
+				"BactorialUpdateWorld"
+			],
+			[
+				"unse",
+				"BactorialUnselect"
+			],
+			[
+				"spaw",
+				"BactorialSpawnEnemy"
+			],
+			[
+				"BactorialSpawnEnemy",
+				"BactorialSpawnEnemy"
+			],
+			[
+				"re",
+				"Render"
+			],
+			[
+				"wolrd",
+				"world"
+			],
+			[
+				"weo",
+				"world_state"
+			],
+			[
+				"BactorialFindEnemy",
+				"BactorialFindEnemy"
+			],
+			[
+				"findene",
+				"FindEnemy"
+			],
+			[
+				"desele",
+				"BactorialDeselect"
+			],
+			[
+				"intiwor",
+				"BactorialInitWorld"
+			],
+			[
+				"initwo",
+				"BactorialInitWorld"
+			],
+			[
+				"BactorialSelect",
+				"BactorialSelect"
 			],
 			[
 				"object",
 				"object"
+			],
+			[
+				"enemy",
+				"BactorialAttackEnemy"
+			],
+			[
+				"find",
+				"FindEnemy"
+			],
+			[
+				"attack",
+				"BactorialAttackEnemy"
+			],
+			[
+				"loca",
+				"LocateObjectWithP"
+			],
+			[
+				"worl",
+				"world"
+			],
+			[
+				"up",
+				"BactorialUpdateWorld"
+			],
+			[
+				"selec",
+				"BactorialSelect"
+			],
+			[
+				"updat",
+				"BactorialUpdateWorld"
+			],
+			[
+				"obje",
+				"object"
+			],
+			[
+				"status",
+				"status_"
+			],
+			[
+				"select",
+				"BactorialSelectAtP"
+			],
+			[
+				"bactoria",
+				"BactorialAttack"
+			],
+			[
+				"upd",
+				"BactorialUpdateWorld"
+			],
+			[
+				"enem",
+				"enemy"
+			],
+			[
+				"ene",
+				"enemy_phase_"
+			],
+			[
+				"mode",
+				"mode_"
+			],
+			[
+				"selectat",
+				"BactorialSelectAtP"
+			],
+			[
+				"BactorialSelectAtP",
+				"BactorialSelectAtP"
+			],
+			[
+				"slec",
+				"BactorialSelect"
+			],
+			[
+				"obj",
+				"object"
+			],
+			[
+				"wor",
+				"world"
+			],
+			[
+				"bacto",
+				"BactorialDivide"
+			],
+			[
+				"bactor",
+				"BactorialUpdateWorld"
+			],
+			[
+				"upda",
+				"updateWorld"
+			],
+			[
+				"load",
+				"Loader"
+			],
+			[
+				"render",
+				"Render"
+			],
+			[
+				"max_",
+				"MAX_OBJECTS"
+			],
+			[
+				"stabil",
+				"BactorialStabilizeColony"
+			],
+			[
+				"catm",
+				"initNonuniformCatmullRom"
+			],
+			[
+				"wo",
+				"world"
+			],
+			[
+				"stabi",
+				"BactorialStabilizeColony"
+			],
+			[
+				"ren",
+				"Render"
+			],
+			[
+				"selecta",
+				"BactorialSelectAtP"
+			],
+			[
+				"wol",
+				"world"
+			],
+			[
+				"init",
+				"BactorialInitWorld"
+			],
+			[
+				"spawn",
+				"SPAWN_COST"
 			],
 			[
 				"UINT_MAX",
@@ -2513,24 +2735,12 @@
 				"updateWorld"
 			],
 			[
-				"initw",
-				"BactorialInitWorld"
-			],
-			[
 				"BactorialInitWorld",
 				"BactorialInitWorld"
 			],
 			[
 				"UpdateWo",
 				"updateWorld"
-			],
-			[
-				"upda",
-				"updateWorld"
-			],
-			[
-				"initwo",
-				"BactorialInitWorld"
 			],
 			[
 				"objec",
@@ -2563,10 +2773,6 @@
 			[
 				"updatew",
 				"updateWorld"
-			],
-			[
-				"obje",
-				"object"
 			],
 			[
 				"selecte",
@@ -2609,10 +2815,6 @@
 				"BuildQuadTree"
 			],
 			[
-				"worl",
-				"world"
-			],
-			[
 				"rect",
 				"RectDim"
 			],
@@ -2631,10 +2833,6 @@
 			[
 				"state",
 				"state"
-			],
-			[
-				"loca",
-				"Location"
 			],
 			[
 				"ffto",
@@ -2811,195 +3009,11 @@
 			[
 				"editable_string",
 				"editable_string"
-			],
-			[
-				"ls_par",
-				"ls_parser"
-			],
-			[
-				"bytes",
-				"MoveGapToByteOffset"
-			],
-			[
-				"cono",
-				"console"
-			],
-			[
-				"EnsureSizeFits",
-				"EnsureSizeFits"
-			],
-			[
-				"getline",
-				"GetLine"
-			],
-			[
-				"",
-				"AppendChar"
-			],
-			[
-				"all",
-				"Allocate"
-			],
-			[
-				"block",
-				"BLOCK_SIZE"
-			],
-			[
-				"storae",
-				"storage_block"
-			],
-			[
-				"ls_string",
-				"ls_string"
-			],
-			[
-				"string_pos",
-				"string_pos"
-			],
-			[
-				"console",
-				"console"
-			],
-			[
-				"find",
-				"find_space_result"
-			],
-			[
-				"con",
-				"console"
-			],
-			[
-				"shiapp",
-				"ShiAppendBuffer"
-			],
-			[
-				"Allocate",
-				"Allocate"
-			],
-			[
-				"ensure",
-				"EnsureSizeFits"
-			],
-			[
-				"storage_",
-				"storage_block"
-			],
-			[
-				"pooks",
-				"pooks_style"
-			],
-			[
-				"parse",
-				"PooksParseStyle"
-			],
-			[
-				"finalize",
-				"PooksFinalizeLayout"
-			],
-			[
-				"parses",
-				"PooksParseStyle"
-			],
-			[
-				"debugda",
-				"debug_data"
-			],
-			[
-				"finali",
-				"PooksFinalizeLayout"
-			],
-			[
-				"pookl",
-				"PooksLoadStyle"
-			],
-			[
-				"obj",
-				"object"
-			],
-			[
-				"ls_fra",
-				"ls_frame_array"
-			],
-			[
-				"dorow",
-				"PooksDoRowLayout"
-			],
-			[
-				"pooks_var",
-				"pooks_var"
-			],
-			[
-				"pooks_va",
-				"pooks_val_"
-			],
-			[
-				"pooks_s",
-				"pooks_style"
-			],
-			[
-				"debug_da",
-				"debug_data"
-			],
-			[
-				"doman",
-				"PooksDoManualLayout"
-			],
-			[
-				"color",
-				"color_picker"
-			],
-			[
-				"windo",
-				"window_fill"
-			],
-			[
-				"framest",
-				"CascadeFrameStart"
-			],
-			[
-				"win",
-				"window_fill"
-			],
-			[
-				"hsv",
-				"GetHSVAFromRGBA"
-			],
-			[
-				"doma",
-				"PooksDoManualLayout"
-			],
-			[
-				"pooks_context",
-				"pooks_context"
-			],
-			[
-				"oman",
-				"PooksDoManualLayout"
-			],
-			[
-				"window",
-				"window_fill"
-			],
-			[
-				"gui_s",
-				"gui_state"
-			],
-			[
-				"cascadefra",
-				"CascadeFrameStart"
-			],
-			[
-				"parsest",
-				"PooksParseStyle"
-			],
-			[
-				"pooks_te",
-				"pooks_text"
 			]
 		],
 		"width": 592.0
 	},
-	"selected_group": 1,
+	"selected_group": 0,
 	"settings":
 	{
 	},

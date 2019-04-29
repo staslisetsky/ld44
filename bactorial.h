@@ -83,6 +83,7 @@ struct object {
     v2 Velocity2;
     r32 Radius;
     b32 Selected;
+    v2 DirectionChoice;
 
     status_ Status;
     r32 MitosisProgress;
@@ -97,8 +98,16 @@ struct world {
     v2 *Velocities;
     r32 *Radii;
     u8 *States;
+    v2 *Seeds;
+
+    rect AABB;
     
 // internal data:
+    v2 FloatDirection;
+    v2 NextDirection;
+    r32 FloatProgress;
+    r32 FloatTime;
+
     r32 DeadRadius;
     r32 NextSpawn;
 

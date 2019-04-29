@@ -135,6 +135,11 @@ Render()
         DrawRectOutline(RenderRect);
     }
 
+    // rect AABBRect = World.AABB;
+    // AABBRect.Min += V2(250.0f, 250.0f);
+    // AABBRect.Max += V2(250.0f, 250.0f);
+    // DrawRectOutline(AABBRect);
+
     // RenderTarget->FillRectangle(D2D1::RectF(World.AttractorP.x, World.AttractorP.y, World.AttractorP.x + 40, World.AttractorP.y + 40), RedBrush);
 
     RenderTarget->EndDraw();
@@ -422,7 +427,7 @@ WinMain(HINSTANCE Instance, HINSTANCE PreviousInstance, LPSTR Args, int WindowSh
     // State.Editable.Data = (u8 *)Allocate(State.Editable.Size);
     // State.Editable.At = State.Editable.Data;
 
-    BactorialInitWorld();
+    BactorialInitWorld(1, 50.0f, 1.0f);
     
     while (AppRunning) {
         MSG Message;
@@ -474,7 +479,14 @@ WinMain(HINSTANCE Instance, HINSTANCE PreviousInstance, LPSTR Args, int WindowSh
             BactorialCommenceMitosis();
         }
 
+
         r32 dt = 1.0f/ 60.0f;
+        World.NextSpawn -= dt;
+        if (World.NextSpawn <= 0.0) {
+            World.NextSpawn = RandomN() * 5.0f + 2.0f;
+            BactorialSpawnEnemy(100.0f, RandomN() * 100.0f, 0.0f, 0.0f);
+        }
+
         BactorialUpdateWorld(dt);
         InvalidateRect(Window, NULL, FALSE);
 

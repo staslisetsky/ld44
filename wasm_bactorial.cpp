@@ -7,10 +7,12 @@
 #define UINT_MAX 400000000
 
 extern "C" {
-    void * EMSCRIPTEN_KEEPALIVE BactorialInitWorld();
+    void * EMSCRIPTEN_KEEPALIVE BactorialInitWorld(int Count, float Radius, float Distribution);
     void EMSCRIPTEN_KEEPALIVE BactorialUpdateWorld(float dt);
-    void EMSCRIPTEN_KEEPALIVE BactorialSelect(float minx, float miny, float maxx, float maxy);
+    int EMSCRIPTEN_KEEPALIVE BactorialSelect(float minx, float miny, float maxx, float maxy);
     void EMSCRIPTEN_KEEPALIVE BactorialDivide();
+    void EMSCRIPTEN_KEEPALIVE BactorialUnselect();
+    void EMSCRIPTEN_KEEPALIVE BactorialSpawnEnemy(float Distance, float Radius, float velocityx, float velocityy);
 }
 
 #pragma pack(push,8)  

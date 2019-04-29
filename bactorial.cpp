@@ -21,45 +21,61 @@ Random32()
 }
 
 void
-SpawnEnemy()
+BactorialSpawnEnemy(float Distance, float Radius, float velocityx, float velocityy)
 {
     enemy New = {};
+
+    v2 RectCenter = World.BoundingRect.Min + (World.BoundingRect.Max - World.BoundingRect.Min) / 2.0f;
+    r32 R = Length(World.BoundingRect.Max - World.BoundingRect.Min) / 2.0f;
 
     r32 Theta = RandomN() * PI * 2.0f;
     v2 Direction = {(r32)sin(Theta), (r32)cos(Theta)};
 
-    New.Radius = Random32() % 100 + 10;
-    New.P = Direction * 700.0f;
+    New.Radius = Radius;
+    New.P = Direction * (Distance + R);
+    New.Velocity = {velocityx, velocityy};
     New.Id = GlobalEnemyId++;
 
     World.Enemies[World.EnemyCount++] = New;
+#if WASM
+    EM_ASM({
+      console.log('Enemy spawned at p: ' + [$0, $1]);
+    }, New.P.x, New.P.y);
+#endif
+}
+
+v2
+RandomDirection() {
+    r32 Theta = RandomN() * PI * 2.0f;
+    return {(r32)sin(Theta), (r32)cos(Theta)};    
 }
 
 void
 DivideCell(object *Object)
 {
-    object New = {};
+    if (Object->Radius > 2.0f) {
+        object New = {};
+        u32 NewR = sqrt(Object->Radius * Object->Radius / 2.0f); 
 
-    r32 Theta = RandomN() * PI * 2.0f;
-    v2 Direction = {(r32)sin(Theta), (r32)cos(Theta)};
+        v2 DivideDirection = Object->DirectionChoice;
 
-    u32 NewR = Object->Radius / 2;
-    Object->Radius /= 2;
-    New.Radius = NewR;
+        Object->Radius = NewR;
+        New.Radius = NewR;
 
-    New.P = Object->P + Direction * (r32)NewR;
+        New.P = Object->P + DivideDirection * (r32)NewR;
+        New.DirectionChoice = RandomDirection();
 
-    Object->P = Object->P - Direction * (r32)NewR;
-    Object->Status = Status_Idle;
+        Object->P = Object->P - DivideDirection * (r32)NewR;
+        Object->Status = Status_Idle;
+        Object->DirectionChoice = RandomDirection();
 
-    r32 Speed = RandomN() * 5.0f;
+        Object->Velocity = DivideDirection * -7.0f;
+        New.Velocity = DivideDirection * 7.0f;
 
-    Object->Velocity -= Speed * Direction;
-    New.Velocity += Speed * Direction;
+        New.Soul = RandomN();
 
-    New.Soul = RandomN();
-
-    World.Objects[World.ObjectCount++] = New;
+        World.Objects[World.ObjectCount++] = New;
+    }
 }
 
 void
@@ -129,35 +145,48 @@ BuildQuadTree(quad_tree *Tree, quad_tree_node *Node, rect QRect, object *Objects
 void
 BactorialStabilizeColony()
 {
-    for (u32 i=0; i<World.ObjectCount; ++i) {
-        object *Me = World.Objects + i;
+    if (World.ObjectCount > 1) {
+        for (u32 i=0; i<World.ObjectCount; ++i) {
+            object *Me = World.Objects + i;
 
-        if (Me->Status == Status_Attack) {
-            continue;
-        }
-
-        v2 Velocity = {};
-        for (u32 j=0; j<World.ObjectCount; ++j) {
-            if (j == i) {
+            if (Me->Status == Status_Attack) {
                 continue;
             }
 
-            object *They = World.Objects + j;
-            r32 Distance = Length(Me->P - They->P);
+            v2 Velocity = {};
+            for (u32 j=0; j<World.ObjectCount; ++j) {
+                if (j == i) {
+                    continue;
+                }
 
-            Distance = Max_r32(0.001f, Distance - (Me->Radius + They->Radius));
+                object *They = World.Objects + j;
+                r32 Distance = Length(Me->P - They->P) - (Me->Radius + They->Radius);
 
-            if (Distance > 0.0f) {
+                if (Distance == 0.0) {
+                    Distance = 0.000001;
+                }
+
                 v2 Direction = (Me->P - They->P) / (Distance * Distance);
-                Velocity += Direction * (1.0 / Distance) * 10000.0f;
+
+                if (Distance > 0.0f) {
+                    Velocity += Direction * (1.0 / Distance) * 10.0f;
+
+                    if (Distance > 3.0f) {
+                        r32 AttractionFactor = (Distance - 3 + 1);
+                        AttractionFactor *= AttractionFactor;
+                        Velocity -= Direction * AttractionFactor;
+                    }
+                } else {
+                    Velocity += Direction * 10000000.0f * Abs(Distance * Distance * Distance * Distance * Distance);
+                }
             }
+
+            r32 Value  = Max_r32(0.01f, Length(Velocity));
+            v2 Direction = Velocity / Value;
+
+            Velocity = Direction * Min_r32(Value, 100.0f);
+            Me->Velocity2 = Velocity / r32(World.ObjectCount - 1);
         }
-
-        r32 Value  = Length(Velocity);
-        v2 Direction = Velocity / Value;
-        Velocity = Direction * Min_r32(Value, 100.0f);
-
-        Me->Velocity2 = Velocity / (World.ObjectCount - 1);
     }
 }
 
@@ -220,6 +249,15 @@ BactorialUpdateWorld(float dt)
     r32 LastFrameDeadRadius = World.DeadRadius;
     World.DeadRadius = 0.0f;
 
+    if (World.FloatProgress <= 0.0f) {
+        World.FloatDirection = World.NextDirection;
+        World.FloatProgress = 1.0f;
+        World.FloatTime = (RandomN() * 4.0f + 1);
+        World.NextDirection = RandomDirection();
+    }
+
+    World.FloatProgress -= dt / World.FloatTime;
+
     for (s32 i=0; i<World.ObjectCount; ++i) {
         object *Object = World.Objects + i;
 
@@ -264,38 +302,17 @@ BactorialUpdateWorld(float dt)
 
         }
 
-        // if (World.AttractorActive) {
-        //     World.AttractorP = {(r32)sin(World.Time * 4.0f) * 250.0f + 200.0f, (r32)cos(World.Time * 2.0f) * 250.0f + 200.0f};
-
-        //     r32 Distance = Length(World.AttractorP - World.Objects[i].P);
-        //     v2 Direction = (World.AttractorP - World.Objects[i].P) / Distance;
-
-        //     if (Distance > 40.0f) {
-        //         World.Objects[i].Velocity += Direction * 15000.0f / Distance;
-        //     } else {
-        //         World.Objects[i].Velocity -= Direction * 100;
-        //     }
-            
-        // } else {
-        //     
-        // }
-
-        // r32 Len = Length(World.AttractorP - World.Objects[i].P);
-        // if (Len > MaxDistance) {
-        //     MaxDistance = Len;
-        // }
-
-        // v2 OscillationV = 
-
-        // v2 Velocity = World.Objects[i].Velocity;
-        // r32 DeltaX = Max_r32(Abs_r32(Velocity.x) * 0.1, 0.0f);
-        // r32 DeltaY = Max_r32(Abs_r32(Velocity.x) * 0.1, 0.0f);
-        // Velocity.x += Sign(Velocity.x) * -1.0f * 5.0f;
-
         v2 Slowdown = World.Objects[i].Velocity * -1.0f * 0.02f;
         World.Objects[i].Velocity += Slowdown;
 
-        v2 SummedVelocity = (World.Objects[i].Velocity + World.Objects[i].Velocity2);
+        v2 DriftVelocity = {};
+        r32 RandomRange = (Object->Soul - 0.5f) * 2.0f;
+        DriftVelocity.x = sin((World.Time) / 3.0f * RandomRange) * 3.0f * RandomRange;
+        DriftVelocity.y = cos((World.Time) / 3.0f * RandomRange) * 3.0f * RandomRange;
+
+        DriftVelocity = DriftVelocity + Lerp(World.NextDirection, World.FloatDirection, Clamp(0.0f, World.FloatProgress, 1.0f)) * 3.0f;
+
+        v2 SummedVelocity = (World.Objects[i].Velocity + World.Objects[i].Velocity2) + DriftVelocity;
 
         World.Objects[i].P = Object->P + SummedVelocity * dt;
 
@@ -309,6 +326,7 @@ BactorialUpdateWorld(float dt)
         World.Velocities[i] = SummedVelocity;
         World.Radii[i] = Object->Radius;
         World.States[i] = MakeStateVar(1, Object->Selected, Object->Status);
+        World.Seeds[i] = Object->DirectionChoice;
 
         if (Object->Status == Status_Dead) {
             DestroyObject(i);
@@ -325,30 +343,10 @@ BactorialUpdateWorld(float dt)
 
         Enemy->TargetIndex = 0;
 
-        r32 Distance = Length(Enemy->P - RectCenter);
-        v2 Direction = (RectCenter - Enemy->P) / Distance;
-
-        if (Enemy->Phase == EnemyPhase_Approach) {
-            if (Distance > ApproachRadius) {
-                Enemy->Velocity = Direction * Distance / 10.0;
-            } else {
-                Enemy->Phase = EnemyPhase_Orbit;
-                Enemy->AttackTimer = RandomN() * 20.0f + 0.5f;
-            }
-        } else if (Enemy->Phase == EnemyPhase_Orbit) {
-            Enemy->Velocity = Perp((Enemy->P - RectCenter) / Distance) * 100.0f;
-            Enemy->Velocity += Direction * (Distance - ApproachRadius);
-            Enemy->AttackTimer = Max_r32(Enemy->AttackTimer - dt, 0.0f);
-
-            if (Enemy->AttackTimer == 0.0f) {
-                Enemy->Phase = EnemyPhase_Attack;
-            }
-        } else if (Enemy->Phase == EnemyPhase_Attack) {
-            object *Object = World.Objects + Enemy->TargetIndex;
-            v2 ToTarget = Object->P - Enemy->P;
-            v2 Direction = ToTarget / Length(ToTarget);
-            Enemy->Velocity = Direction * 1000.0 / Enemy->Radius;
-        }
+        object *Object = World.Objects + Enemy->TargetIndex;
+        v2 ToTarget = Object->P - Enemy->P;
+        v2 Direction = ToTarget / Length(ToTarget);
+        Enemy->Velocity = Direction * 1000.0 / Enemy->Radius;
 
         Enemy->P = Enemy->P  + Enemy->Velocity * dt;
 
@@ -358,6 +356,7 @@ BactorialUpdateWorld(float dt)
         World.Velocities[ExportIndex] = Enemy->Velocity;
         World.Radii[ExportIndex] = Enemy->Radius;
         World.States[ExportIndex] = MakeStateVar(0, 0, Enemy->Status);
+        World.Seeds[ExportIndex] = {0.0f, 0.0f};
 
         if (Enemy->Status == Status_Dead) {
             DestroyEnemy(i);
@@ -366,12 +365,8 @@ BactorialUpdateWorld(float dt)
         }
     }
 
-    World.NextSpawn -= dt;
-    if (World.NextSpawn <= 0.0) {
-        World.NextSpawn = RandomN() * 3.0f;
-        SpawnEnemy();    
-    }
-
+    World.AABB = World.BoundingRect;
+    
     // World.Tree.NodeCount = 0;
     // BuildQuadTree(&World.Tree, World.Tree.Root, Screen, World.Objects, World.ObjectCount, MAX_NODE_COUNT);
 
@@ -379,33 +374,38 @@ BactorialUpdateWorld(float dt)
 }
 
 void *
-BactorialInitWorld() 
+BactorialInitWorld(int Count, float Radius, float Distribution)
 {
     pcg32_srandom_r(&Rng, 3908476239044, (int)&Rng);
 
-    World.ObjectCount = 10;
+    World.ObjectCount = Count;
 
     World.Objects = (object *)malloc(sizeof(object) * MAX_OBJECTS);
     World.Positions = (v2 *)malloc(sizeof(v2) * MAX_OBJECTS);
     World.Velocities = (v2 *)malloc(sizeof(v2) * MAX_OBJECTS);
     World.Radii = (r32 *)malloc(sizeof(r32) * MAX_OBJECTS);
     World.States = (u8 *)malloc(sizeof(u8) * MAX_OBJECTS);
+    World.Seeds = (v2 *)malloc(sizeof(v2) * MAX_OBJECTS);
 
     World.Enemies = (enemy *)malloc(sizeof(enemy) * MAX_ENEMIES);
 
 #if 0
     World.Objects[0].Radius = START_R;
-
 #else
     for (u32 i=0; i<World.ObjectCount; ++i) {
-        World.Objects[i].P.x = RandomN() * 25.0f;
-        World.Objects[i].P.y = RandomN() * 25.0f;
-        World.Objects[i].Radius = START_R;
+        World.Objects[i].P.x = (RandomN()-0.5f) * 2.0f * Radius * Distribution;
+        World.Objects[i].P.y = (RandomN()-0.5f) * 2.0f * Radius * Distribution;
+        // World.Objects[i].DirectionChoice = {-0.187381238f, -0.982287288f};
+
+        World.Objects[i].DirectionChoice = RandomDirection();
+        World.Objects[i].Radius = Radius;
+        World.Objects[i].Soul = RandomN();
     }
 #endif
 
-    World.Tree.Root = (quad_tree_node *)malloc(MAX_NODE_COUNT * sizeof(quad_tree_node));
+    World.NextDirection = RandomDirection();
 
+    World.Tree.Root = (quad_tree_node *)malloc(MAX_NODE_COUNT * sizeof(quad_tree_node));
     World.NextSpawn = RandomN() * 5.0f;
 
     return &World;
@@ -490,10 +490,11 @@ BactorialFindEnemy(v2 P)
         }
     }
 
-    r32 DistanceFromSurface = Max_r32(Length(P - Result->P) - Result->Radius, 0.0f);
-
-    if (DistanceFromSurface > 1) {
-        Result = 0;
+    if (Result) {
+        r32 DistanceFromSurface = Max_r32(Length(P - Result->P) - Result->Radius, 0.0f);
+        if (DistanceFromSurface > 1) {
+            Result = 0;
+        }
     }
 
     return Result;
@@ -544,6 +545,20 @@ BactorialDivide() {
 }
 
 void
+BactorialUnselect() {
+    for (u32 i=0; i<World.ObjectCount; ++i) {
+        object *Object = World.Objects + i;
+        Object->Selected = false;
+    }
+#if WASM
+    EM_ASM({
+      console.log('Unselected all objects');
+    });
+#endif
+    World.SelectedCount = 0;
+}
+
+void
 BactorialAttackEnemy(float x, float y) {
 #if WASM
     EM_ASM({
@@ -553,11 +568,12 @@ BactorialAttackEnemy(float x, float y) {
     enemy *Enemy = BactorialFindEnemy(V2(x,y));
     if (Enemy) {
         BactorialAttack(Enemy);
+    } else {
+        BactorialUnselect();
     }
 }
 
-
-void 
+int
 BactorialSelect(float minx, float miny, float maxx, float maxy)
 {
 
@@ -577,6 +593,8 @@ BactorialSelect(float minx, float miny, float maxx, float maxy)
             BactorialAttackEnemy(ClickP.x, ClickP.y);
         }
     } else {
+        World.SelectedCount = 0;
+
         for (u32 i=0; i<World.ObjectCount; ++i) {
             object *Object = World.Objects + i;
             Object->Selected = false;
@@ -593,6 +611,8 @@ BactorialSelect(float minx, float miny, float maxx, float maxy)
       console.log('Selected: ' + [$0]);
     }, World.SelectedCount);
 #endif
+
+    return World.SelectedCount;
 }
 
 
