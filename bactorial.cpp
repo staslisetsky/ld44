@@ -315,6 +315,24 @@ BactorialUpdateWorld(float dt)
     for (s32 i=0; i<World.ObjectCount; ++i) {
         object *Object = World.Objects + i;
 
+        if (Object->Status == Status_Dead) {
+            DestroyObject(i);
+            --i;
+        }
+    }
+
+    for (s32 i=0; i<World.EnemyCount; ++i) {
+        enemy *Enemy = World.Enemies + i;
+
+        if (Enemy->Status == Status_Dead) {
+            DestroyEnemy(i);
+            --i;
+        }
+    }
+
+    for (s32 i=0; i<World.ObjectCount; ++i) {
+        object *Object = World.Objects + i;
+
         if (LastFrameDeadRadius > 0.0f) {
             Object->Radius += LastFrameDeadRadius / World.ObjectCount;
         }
@@ -334,8 +352,15 @@ BactorialUpdateWorld(float dt)
 
             r32 Distance  = Max_r32(Length(Object->P - Enemy->P) - (Enemy->Radius + Object->Radius), 0.0f);
             if (Distance < 1.0f) {
+                
                 Enemy->Status = Status_Dead;
                 Object->Status = Status_Dead;
+
+                #if WASM
+                    EM_ASM({
+                    console.log('Kill entity : ' + [$0, $1]);
+                    }, i, j);
+                #endif
                 Dead = true;
                 World.DeadRadius += Enemy->Radius;
                 break;
@@ -386,12 +411,6 @@ BactorialUpdateWorld(float dt)
         World.Radii[i] = Object->Radius;
         World.States[i] = MakeStateVar(1, Object->Selected, Object->Status);
         World.Seeds[i] = Object->DirectionChoice;
-
-        if (Object->Status == Status_Dead) {
-            DestroyObject(i);
-            --i;
-            continue;
-        }
     }
 
     World.FatIndex = FatIndex;
@@ -413,11 +432,11 @@ BactorialUpdateWorld(float dt)
 
             v2 Midpoint = Lerp(Object->P, Enemy->StartP, 0.5);
             Enemy->BezierControl = Midpoint +  Normalize(Perp(Object->P - Enemy->StartP)) * 
-                                            (((RandomN() - 0.5f) * 2.0f * 500.0f));
+                                            (((RandomN() - 0.5f) * 2.0f * 250.0f));
             Enemy->AttackProgress = 0.0f;
         } else {
             r32 MassFactor = Enemy->Radius;
-            Enemy->AttackProgress += 8.0f * dt / MassFactor;
+            Enemy->AttackProgress += dt * MassFactor * 0.001f;
         }
 
         Enemy->P = QuadraticBezierPoint(Enemy->StartP, Object->P, Enemy->BezierControl, Clamp(0.0f, Enemy->AttackProgress, 1.0f));
@@ -429,12 +448,6 @@ BactorialUpdateWorld(float dt)
         World.Radii[ExportIndex] = Enemy->Radius;
         World.States[ExportIndex] = MakeStateVar(0, 0, Enemy->Status);
         World.Seeds[ExportIndex] = {0.0f, 0.0f};
-
-        if (Enemy->Status == Status_Dead) {
-            DestroyEnemy(i);
-            --i;
-            continue;
-        }
     }
 
     World.AABB = World.BoundingRect;
