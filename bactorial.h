@@ -91,6 +91,9 @@ struct object {
     v2 Velocity2;
     v2 FilterV2;
 
+    v2 V[10];
+    u32 Vcount;
+
     r32 Radius;
     b32 Selected;
     v2 DirectionChoice;
@@ -113,6 +116,7 @@ struct world {
     rect AABB;
     
 // internal data:
+
     b32 AutoSpawn;
     v2 FloatDirection;
     v2 NextDirection;

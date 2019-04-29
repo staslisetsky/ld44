@@ -213,11 +213,21 @@ BactorialStabilizeColony()
 
             v2 StabilizingVelocity = Velocity / r32(World.ObjectCount - 1);
             if (Intersections) {
-                Me->FilterV2 += IntersectionCancel;
+                StabilizingVelocity += IntersectionCancel;
             }
 
+            // Me->V[Me->Vcount] = StabilizingVelocity;
+            // Me->Vcount = (Me->Vcount++) % 9;
+
+            // v2 Sum = {};
+            // for (u32 k=0; k<10; ++k) {
+            //     Sum += Me->V[k];
+            // }
+            // Sum = Sum / 10;
+
+            // Me->Velocity2 = Sum;
             Me->Velocity2 = StabilizingVelocity + Me->FilterV2;
-            Me->FilterV2 = StabilizingVelocity * 0.3f;
+            Me->FilterV2 += StabilizingVelocity * 0.05f;
         }
     }
 }
