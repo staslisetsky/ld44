@@ -180,16 +180,29 @@ BactorialStabilizeColony()
 
                 v2 Direction = (Me->P - They->P) / (Distance * Distance);
 
-                if (Distance > 0.0f) {
-                    Velocity += Direction * 100.0f;
-                    if (Distance > 5.0f) {
-                        r32 AttractionFactor = (Distance - 3 + 1);
-                        AttractionFactor *= AttractionFactor;
-                        Velocity -= Direction * AttractionFactor;
-                    }
-                } else {
+                r32 MaxDistance = (Me->Radius + They->Radius) / 5.0f;
+                if (Distance < MaxDistance) {
                     ++Intersections;
-                    IntersectionCancel += Direction * (Distance * Distance);
+                    v2 Force = Direction * (Distance * Distance);
+                    if (Distance > 0) {
+                        r32 Factor = 1.0f - Distance / MaxDistance;
+                        Force = Force * Factor;
+                    } else {
+                        r32 Force = pow(Abs(Distance) / Me->Radius * 5.0, 2.0);
+                        IntersectionCancel += Direction * Force;
+                    }
+                    IntersectionCancel += Force;
+                }
+
+                if (Distance > 0) {
+                    r32 AttractionFactor = (Distance - 3 + 1);
+                    AttractionFactor *= AttractionFactor;
+                    v2 Force = Direction * AttractionFactor;
+                    if (Distance < MaxDistance) {
+                        r32 Factor = Distance / MaxDistance;
+                        Force = Force * Factor;
+                    }
+                    Velocity -= Force;
                 }
             }
 
@@ -199,16 +212,12 @@ BactorialStabilizeColony()
             Velocity = Direction * Min_r32(Value, 100.0f);
 
             v2 StabilizingVelocity = Velocity / r32(World.ObjectCount - 1);
-
             if (Intersections) {
-                IntersectionCancel = IntersectionCancel / Intersections;
-                r32 Value = Max_r32(0.00001f, Length(IntersectionCancel));
-                v2 Direction = IntersectionCancel / Value;
-                IntersectionCancel = Direction * Min_r32(Value, 100.0f);
-                StabilizingVelocity = StabilizingVelocity + IntersectionCancel;
+                Me->FilterV2 += IntersectionCancel;
             }
 
-            Me->Velocity2 = StabilizingVelocity;
+            Me->Velocity2 = StabilizingVelocity + Me->FilterV2;
+            Me->FilterV2 = StabilizingVelocity * 0.3f;
         }
     }
 }
@@ -295,8 +304,6 @@ BactorialUpdateWorld(float dt)
 
     for (s32 i=0; i<World.ObjectCount; ++i) {
         object *Object = World.Objects + i;
-
-        Object->Radius += 0.01;
 
         if (LastFrameDeadRadius > 0.0f) {
             Object->Radius += LastFrameDeadRadius / World.ObjectCount;
