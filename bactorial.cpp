@@ -40,7 +40,7 @@ BactorialSpawnEnemy(float Distance, float Radius, float velocityx, float velocit
     v2 Direction = {(r32)sin(Theta), (r32)cos(Theta)};
 
     New.Radius = Radius;
-    New.P = Direction * (Distance + R);
+    New.P = Direction * (Distance + R) + RectCenter;
     New.Velocity = {velocityx, velocityy};
     New.Id = GlobalEnemyId++;
     New.TargetIndex = World.FatIndex;
@@ -216,16 +216,6 @@ BactorialStabilizeColony()
                 StabilizingVelocity += IntersectionCancel;
             }
 
-            // Me->V[Me->Vcount] = StabilizingVelocity;
-            // Me->Vcount = (Me->Vcount++) % 9;
-
-            // v2 Sum = {};
-            // for (u32 k=0; k<10; ++k) {
-            //     Sum += Me->V[k];
-            // }
-            // Sum = Sum / 10;
-
-            // Me->Velocity2 = Sum;
             Me->Velocity2 = StabilizingVelocity + Me->FilterV2;
             Me->FilterV2 += StabilizingVelocity * 0.05f;
         }
@@ -262,14 +252,12 @@ FindEnemy(u32 Id)
     return 0;
 }
 
-
 u8 
 MakeStateVar(b32 Good, b32 Selected, status_ Status)
 {
     u8 Value = (Good << 7) |
              (Selected << 6) |
              Status;
-
     return Value;
 }
 
@@ -311,24 +299,6 @@ BactorialUpdateWorld(float dt)
 
     u32 FatIndex = 0;
     r32 LargestR = 0.0f;
-
-    for (s32 i=0; i<World.ObjectCount; ++i) {
-        object *Object = World.Objects + i;
-
-        if (Object->Status == Status_Dead) {
-            DestroyObject(i);
-            --i;
-        }
-    }
-
-    for (s32 i=0; i<World.EnemyCount; ++i) {
-        enemy *Enemy = World.Enemies + i;
-
-        if (Enemy->Status == Status_Dead) {
-            DestroyEnemy(i);
-            --i;
-        }
-    }
 
     for (s32 i=0; i<World.ObjectCount; ++i) {
         object *Object = World.Objects + i;
@@ -421,6 +391,15 @@ BactorialUpdateWorld(float dt)
     for (s32 i=0; i<World.EnemyCount; ++i) {
         enemy *Enemy = World.Enemies + i;
 
+        if (Enemy->TargetIndex >= World.ObjectCount) {
+            Enemy->TargetIndex = World.ObjectCount - 1;
+        }
+
+        if (World.ObjectCount == 0) {
+            Enemy->Status = Status_Dead;
+            continue;
+        }
+        
         object *Object = World.Objects + Enemy->TargetIndex;
         v2 ToTarget = Object->P - Enemy->P;
 
@@ -448,6 +427,24 @@ BactorialUpdateWorld(float dt)
         World.Radii[ExportIndex] = Enemy->Radius;
         World.States[ExportIndex] = MakeStateVar(0, 0, Enemy->Status);
         World.Seeds[ExportIndex] = {0.0f, 0.0f};
+    }
+
+    for (s32 i=0; i<World.ObjectCount; ++i) {
+        object *Object = World.Objects + i;
+        if (Object->Status == Status_Dead) {
+            DestroyObject(i);
+            --i;
+            continue;
+        }
+    }
+
+    for (s32 i=0; i<World.EnemyCount; ++i) {
+        enemy *Enemy = World.Enemies + i;
+        if (Enemy->Status == Status_Dead) {
+            DestroyEnemy(i);
+            --i;
+            continue;
+        }
     }
 
     World.AABB = World.BoundingRect;
