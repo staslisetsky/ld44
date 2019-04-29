@@ -428,7 +428,7 @@ WinMain(HINSTANCE Instance, HINSTANCE PreviousInstance, LPSTR Args, int WindowSh
     // State.Editable.Data = (u8 *)Allocate(State.Editable.Size);
     // State.Editable.At = State.Editable.Data;
 
-    BactorialInitWorld(1, 50.0f, 1.0f, 1);
+    BactorialInitWorld(1, 50.0f, 1.0f, 0);
     
     while (AppRunning) {
         MSG Message;

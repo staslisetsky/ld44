@@ -86,8 +86,11 @@ struct object {
     u32 EnemyId;
 
     v2 P;
+
     v2 Velocity;
     v2 Velocity2;
+    v2 FilterV2;
+
     r32 Radius;
     b32 Selected;
     v2 DirectionChoice;
