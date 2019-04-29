@@ -20,6 +20,14 @@ Random32()
     return pcg32_random_r(&Rng);
 }
 
+v2
+QuadraticBezierPoint(v2 A, v2 B, v2 Control, r32 t)
+{
+    v2 One = Lerp(A, Control, t);
+    v2 Two = Lerp(Control, B, t);
+    return Lerp(One, Two, t);
+}
+
 void
 BactorialSpawnEnemy(float Distance, float Radius, float velocityx, float velocityy)
 {
@@ -35,6 +43,7 @@ BactorialSpawnEnemy(float Distance, float Radius, float velocityx, float velocit
     New.P = Direction * (Distance + R);
     New.Velocity = {velocityx, velocityy};
     New.Id = GlobalEnemyId++;
+    New.TargetIndex = World.FatIndex;
 
     World.Enemies[World.EnemyCount++] = New;
 #if WASM
@@ -234,6 +243,15 @@ MakeStateVar(b32 Good, b32 Selected, status_ Status)
 void 
 BactorialUpdateWorld(float dt) 
 {
+    if (World.AutoSpawn) {
+        World.NextSpawn -= dt;
+        if (World.NextSpawn <= 0.0) {
+            World.NextSpawn = RandomN() * 3.5f;
+            r32 Radius = pow(RandomN(), 2.2f) * 80.0f + 20.0f;
+            BactorialSpawnEnemy(RandomN() * 300.0f + 50.0f, Radius, 0.0f, 0.0f);
+        }
+    }
+
     rect Screen = {{0.0f, 0.0f}, {500.0f, 500.0f}};
 
     r32 MaxDistance = 0.0f;
@@ -258,11 +276,19 @@ BactorialUpdateWorld(float dt)
 
     World.FloatProgress -= dt / World.FloatTime;
 
+    u32 FatIndex = 0;
+    r32 LargestR = 0.0f;
+
     for (s32 i=0; i<World.ObjectCount; ++i) {
         object *Object = World.Objects + i;
 
         if (LastFrameDeadRadius > 0.0f) {
             Object->Radius += LastFrameDeadRadius / World.ObjectCount;
+        }
+
+        if (Object->Radius > LargestR) {
+            LargestR = Object->Radius;
+            FatIndex = i;
         }
 
         b32 Dead = false;
@@ -335,20 +361,33 @@ BactorialUpdateWorld(float dt)
         }
     }
 
+    World.FatIndex = FatIndex;
+
     v2 RectCenter = World.BoundingRect.Min + (World.BoundingRect.Max - World.BoundingRect.Min) / 2.0f;
     r32 ApproachRadius = Length(World.BoundingRect.Max - World.BoundingRect.Min) / 2.0f + 50.0f;
 
     for (s32 i=0; i<World.EnemyCount; ++i) {
         enemy *Enemy = World.Enemies + i;
 
-        Enemy->TargetIndex = 0;
-
         object *Object = World.Objects + Enemy->TargetIndex;
         v2 ToTarget = Object->P - Enemy->P;
-        v2 Direction = ToTarget / Length(ToTarget);
-        Enemy->Velocity = Direction * 1000.0 / Enemy->Radius;
 
-        Enemy->P = Enemy->P  + Enemy->Velocity * dt;
+        r32 Distance = Length(ToTarget);
+
+        if (!Enemy->Started) {
+            Enemy->Started = true;
+            Enemy->StartP = Enemy->P;
+
+            v2 Midpoint = Lerp(Object->P, Enemy->StartP, 0.5);
+            Enemy->BezierControl = Midpoint +  Normalize(Perp(Object->P - Enemy->StartP)) * 
+                                            (((RandomN() - 0.5f) * 2.0f * 500.0f));
+            Enemy->AttackProgress = 0.0f;
+        } else {
+            r32 MassFactor = Enemy->Radius;
+            Enemy->AttackProgress += 8.0f * dt / MassFactor;
+        }
+
+        Enemy->P = QuadraticBezierPoint(Enemy->StartP, Object->P, Enemy->BezierControl, Clamp(0.0f, Enemy->AttackProgress, 1.0f));
 
         u32 ExportIndex= i + World.ObjectCount;
         // js export:
@@ -374,20 +413,20 @@ BactorialUpdateWorld(float dt)
 }
 
 void *
-BactorialInitWorld(int Count, float Radius, float Distribution)
+BactorialInitWorld(int Count, float Radius, float Distribution, int AutoSpawn)
 {
     pcg32_srandom_r(&Rng, 3908476239044, (int)&Rng);
 
     World.ObjectCount = Count;
-
+    World.AutoSpawn = AutoSpawn;
     World.Objects = (object *)malloc(sizeof(object) * MAX_OBJECTS);
     World.Positions = (v2 *)malloc(sizeof(v2) * MAX_OBJECTS);
     World.Velocities = (v2 *)malloc(sizeof(v2) * MAX_OBJECTS);
     World.Radii = (r32 *)malloc(sizeof(r32) * MAX_OBJECTS);
     World.States = (u8 *)malloc(sizeof(u8) * MAX_OBJECTS);
     World.Seeds = (v2 *)malloc(sizeof(v2) * MAX_OBJECTS);
-
     World.Enemies = (enemy *)malloc(sizeof(enemy) * MAX_ENEMIES);
+    World.NextSpawn = 3.5f;
 
 #if 0
     World.Objects[0].Radius = START_R;
@@ -406,7 +445,6 @@ BactorialInitWorld(int Count, float Radius, float Distribution)
     World.NextDirection = RandomDirection();
 
     World.Tree.Root = (quad_tree_node *)malloc(MAX_NODE_COUNT * sizeof(quad_tree_node));
-    World.NextSpawn = RandomN() * 5.0f;
 
     return &World;
 }

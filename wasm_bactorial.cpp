@@ -7,7 +7,7 @@
 #define UINT_MAX 400000000
 
 extern "C" {
-    void * EMSCRIPTEN_KEEPALIVE BactorialInitWorld(int Count, float Radius, float Distribution);
+    void * EMSCRIPTEN_KEEPALIVE BactorialInitWorld(int Count, float Radius, float Distribution, int AutoSpawn);
     void EMSCRIPTEN_KEEPALIVE BactorialUpdateWorld(float dt);
     int EMSCRIPTEN_KEEPALIVE BactorialSelect(float minx, float miny, float maxx, float maxy);
     void EMSCRIPTEN_KEEPALIVE BactorialDivide();

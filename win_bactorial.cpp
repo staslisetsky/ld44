@@ -101,11 +101,12 @@ Render()
     RenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::White));
 
     DrawQuadTree(World.Tree.Root);
+    u32 HalfScreen = 250;
 
     for (u32 i=0; i<World.ObjectCount; ++i) {
         object Object = World.Objects[i];
         u32 Dim = 10;
-        u32 HalfScreen = 250;
+       
 
         D2D1_POINT_2F ObjectCenter = {Object.P.x + HalfScreen, Object.P.y + HalfScreen};
         D2D1_ELLIPSE ObjectEllipse = {ObjectCenter, (r32)Object.Radius, (r32)Object.Radius};
@@ -427,7 +428,7 @@ WinMain(HINSTANCE Instance, HINSTANCE PreviousInstance, LPSTR Args, int WindowSh
     // State.Editable.Data = (u8 *)Allocate(State.Editable.Size);
     // State.Editable.At = State.Editable.Data;
 
-    BactorialInitWorld(1, 50.0f, 1.0f);
+    BactorialInitWorld(1, 50.0f, 1.0f, 1);
     
     while (AppRunning) {
         MSG Message;
@@ -479,13 +480,7 @@ WinMain(HINSTANCE Instance, HINSTANCE PreviousInstance, LPSTR Args, int WindowSh
             BactorialCommenceMitosis();
         }
 
-
         r32 dt = 1.0f/ 60.0f;
-        World.NextSpawn -= dt;
-        if (World.NextSpawn <= 0.0) {
-            World.NextSpawn = RandomN() * 5.0f + 2.0f;
-            BactorialSpawnEnemy(100.0f, RandomN() * 100.0f, 0.0f, 0.0f);
-        }
 
         BactorialUpdateWorld(dt);
         InvalidateRect(Window, NULL, FALSE);

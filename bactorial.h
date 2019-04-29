@@ -68,6 +68,13 @@ struct enemy {
     u32 TargetIndex;
 
     v2 P;
+
+    v2 BezierControl;
+    v2 StartP;
+    b32 Started;
+    r32 InitialDistance;
+    r32 AttackProgress;
+
     v2 Velocity;
     r32 Radius;
     r32 Soul;
@@ -103,6 +110,7 @@ struct world {
     rect AABB;
     
 // internal data:
+    b32 AutoSpawn;
     v2 FloatDirection;
     v2 NextDirection;
     r32 FloatProgress;
@@ -112,6 +120,7 @@ struct world {
     r32 NextSpawn;
 
     u32 Fattest[10];
+    u32 FatIndex;
     rect BoundingRect;
 
     u32 SelectedIndex;
